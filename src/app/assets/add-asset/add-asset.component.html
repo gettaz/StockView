@@ -1,0 +1,40 @@
+<!-- add-asset.component.html -->
+<ng-template #modalContent let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Add Asset</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form #assetForm="ngForm" (ngSubmit)="onSubmit(assetForm)">
+      <!-- Input fields for asset properties -->
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" class="form-control" id="name" [(ngModel)]="newAsset.name" required>
+      </div>
+      <div class="form-group">
+        <label for="ticker">Ticker:</label>
+        <input type="text" class="form-control" id="ticker" [(ngModel)]="newAsset.ticker" required>
+      </div>
+      <!-- Add more input fields for other asset properties -->
+      <div class="form-group">
+        <label for="holdings">Holdings:</label>
+        <input type="number" class="form-control" id="holdings" [(ngModel)]="newAsset.holdings" required>
+      </div>
+      <div class="form-group">
+        <label for="quantity">Quantity:</label>
+        <input type="number" class="form-control" id="quantity" [(ngModel)]="newAsset.quantity" required>
+      </div>
+      <!-- Add input fields for other asset properties -->
+
+      <!-- Submit and cancel buttons -->
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<button class="btn btn-primary" (click)="openModal()">Add Asset</button>

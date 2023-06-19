@@ -1,0 +1,74 @@
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Ticker</th>
+    <th>Holdings</th>
+    <th>Quantity</th>
+    <th>Current Price</th>
+    <th>Price Bought</th>
+    <th>Overall Investment</th>
+    <th>Gain</th>
+    <th>%Val</th>
+    <th>Broker</th>
+    <th>Category</th>
+  </tr>
+  <tr *ngFor="let asset of assets">
+    <td>{{ asset.name }}</td>
+    <td>{{ asset.ticker }}</td>
+    <td>{{ asset.holdings }}</td>
+    <td>{{ asset.quantity }}</td>
+    <td>{{ asset.currentPrice }}</td>
+    <td>{{ asset.priceBought }}</td>
+    <td>{{ asset.overallInvestment }}</td>
+    <td>{{ asset.gain }}</td>
+    <td>{{ asset.val }}</td>
+    <td>{{ asset.broker }}</td>
+    <td>{{ asset.category }}</td>
+  </tr>
+</table>
+
+
+<button class="btn btn-primary" (click)="openModal()">Add Asset</button>
+
+<!-- Add Asset Modal -->
+<div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': showForm}" [ngStyle]="{'display': showForm ? 'block' : 'none'}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Asset</h5>
+        <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="onAssetAdded()" #assetForm="ngForm">
+          <!-- Input fields for asset properties -->
+          <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" class="form-control" id="name" [(ngModel)]="newAsset.name" name="name" required>
+          </div>
+          <div class="form-group">
+            <label for="ticker">Ticker:</label>
+            <input type="text" class="form-control" id="ticker" [(ngModel)]="newAsset.ticker" name="ticker" required>
+          </div>
+          <!-- Add more input fields for other asset properties -->
+          <div class="form-group">
+            <label for="holdings">Holdings:</label>
+            <input type="number" class="form-control" id="holdings" [(ngModel)]="newAsset.holdings" name="holdings" required>
+          </div>
+          <div class="form-group">
+            <label for="quantity">Quantity:</label>
+            <input type="number" class="form-control" id="quantity" [(ngModel)]="newAsset.quantity" name="quantity" required>
+          </div>
+          <!-- Add input fields for other asset properties -->
+
+          <!-- Submit and cancel buttons -->
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
