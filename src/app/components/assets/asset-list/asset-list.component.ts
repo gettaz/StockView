@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Asset } from '../../../models/Asset';
 
 @Component({
   selector: 'app-asset-list',
@@ -6,7 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./asset-list.component.css']
 })
 export class AssetListComponent {
-  assets = [
+  assets : Asset[] = [
     {
       name: 'Asset 1',
       ticker: 'A1',
