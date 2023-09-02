@@ -1,31 +1,26 @@
 <table>
   <tr>
-    <th>Name</th>
+    <th>Asset Name</th>
     <th>Ticker</th>
-    <th>Holdings</th>
-    <th>Quantity</th>
-    <th>Current Price</th>
     <th>Price Bought</th>
-    <th>Overall Investment</th>
-    <th>Gain</th>
-    <th>%Val</th>
-    <th>Broker</th>
-    <th>Category</th>
+    <th>Amount</th>
+    <th>Broker Name</th>
+    <th>Date Bought</th>
+    <th>Date Sold</th>
+    <th>Price</th>
   </tr>
   <tr *ngFor="let asset of assets">
-    <td>{{ asset.name }}</td>
+    <td>{{ asset.assetName }}</td>
     <td>{{ asset.ticker }}</td>
-    <td>{{ asset.holdings }}</td>
-    <td>{{ asset.quantity }}</td>
-    <td>{{ asset.currentPrice }}</td>
     <td>{{ asset.priceBought }}</td>
-    <td>{{ asset.overallInvestment }}</td>
-    <td>{{ asset.gain }}</td>
-    <td>{{ asset.val }}</td>
-    <td>{{ asset.broker }}</td>
-    <td>{{ asset.category }}</td>
+    <td>{{ asset.amount }}</td>
+    <td>{{ asset.brokerName }}</td>
+    <td>{{ asset.dateBought }}</td>
+    <td>{{ asset.dateSold }}</td>
+    <td>{{ asset.currentPrice }}</td>
   </tr>
 </table>
+
 
 <button class="btn btn-primary" (click)="openModal()">Add Asset</button>
 
@@ -43,50 +38,26 @@
         <form (ngSubmit)="onAssetAdded()" #assetForm="ngForm">
           <!-- Input fields for asset properties -->
           <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" class="form-control" id="name" [(ngModel)]="newAsset.name" name="name" required>
+            <label for="assetName">Asset Name:</label>
+            <input type="text" class="form-control" id="assetName" [(ngModel)]="newAsset.assetName" name="assetName" required>
           </div>
           <div class="form-group">
             <label for="ticker">Ticker:</label>
             <input type="text" class="form-control" id="ticker" [(ngModel)]="newAsset.ticker" name="ticker" required>
           </div>
           <div class="form-group">
-            <label for="holdings">Holdings:</label>
-            <input type="number" class="form-control" id="holdings" [(ngModel)]="newAsset.holdings" name="holdings" required>
-          </div>
-          <div class="form-group">
-            <label for="quantity">Quantity:</label>
-            <input type="number" class="form-control" id="quantity" [(ngModel)]="newAsset.quantity" name="quantity" required>
-          </div>
-          <div class="form-group">
-            <label for="currentPrice">Current Price:</label>
-            <input type="number" class="form-control" id="currentPrice" [(ngModel)]="newAsset.currentPrice" name="currentPrice" required>
-          </div>
-          <div class="form-group">
             <label for="priceBought">Price Bought:</label>
             <input type="number" class="form-control" id="priceBought" [(ngModel)]="newAsset.priceBought" name="priceBought" required>
           </div>
           <div class="form-group">
-            <label for="overallInvestment">Overall Investment:</label>
-            <input type="number" class="form-control" id="overallInvestment" [(ngModel)]="newAsset.overallInvestment" name="overallInvestment" required>
+            <label for="amount">Amount:</label>
+            <input type="number" class="form-control" id="amount" [(ngModel)]="newAsset.amount" name="amount" required>
           </div>
           <div class="form-group">
-            <label for="gain">Gain:</label>
-            <input type="number" class="form-control" id="gain" [(ngModel)]="newAsset.gain" name="gain" required>
+            <label for="brokerName">Broker Name:</label>
+            <input type="text" class="form-control" id="brokerName" [(ngModel)]="newAsset.brokerName" name="brokerName" required>
           </div>
-          <div class="form-group">
-            <label for="val">%Val:</label>
-            <input type="number" class="form-control" id="val" [(ngModel)]="newAsset.val" name="val" required>
-          </div>
-          <div class="form-group">
-            <label for="broker">Broker:</label>
-            <input type="text" class="form-control" id="broker" [(ngModel)]="newAsset.broker" name="broker" required>
-          </div>
-          <div class="form-group">
-            <label for="category">Category:</label>
-            <input type="text" class="form-control" id="category" [(ngModel)]="newAsset.category" name="category" required>
-          </div>
-
+          <!-- Add more fields as needed -->
           <!-- Submit and cancel buttons -->
           <div class="form-group">
             <button type="submit" class="btn btn-primary">Submit</button>

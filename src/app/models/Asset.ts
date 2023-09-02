@@ -1,40 +1,30 @@
 export class Asset {
-    name: string;
-    ticker: string;
-    holdings: number;
-    quantity: number;
-    currentPrice: number;
-    priceBought: number;
-    overallInvestment: number;
-    gain: number;
-    val: number;
-    broker: string;
-    category: string;
-  
-    constructor(
-      name: string,
-      ticker: string,
-      holdings: number,
-      quantity: number,
-      currentPrice: number,
-      priceBought: number,
-      overallInvestment: number,
-      gain: number,
-      val: number,
-      broker: string,
-      category: string
-    ) {
-      this.name = name;
-      this.ticker = ticker;
-      this.holdings = holdings;
-      this.quantity = quantity;
-      this.currentPrice = currentPrice;
-      this.priceBought = priceBought;
-      this.overallInvestment = overallInvestment;
-      this.gain = gain;
-      this.val = val;
-      this.broker = broker;
-      this.category = category;
-    }
+  assetName: string;
+  ticker: string;
+  priceBought: number;
+  amount: number;
+  brokerName: string;
+  dateBought: Date;
+  dateSold: Date | null;
+  currentPrice: number;
+
+  constructor(
+    assetName: string,
+    ticker: string,
+    priceBought: number,
+    amount: number,
+    brokerName: string,
+    dateBought: Date,
+    dateSold: Date | null,
+    currentPrice: number
+  ) {
+    this.assetName = assetName;
+    this.ticker = ticker;
+    this.priceBought = priceBought;
+    this.amount = amount;
+    this.brokerName = brokerName;
+    this.dateBought = dateBought;
+    this.dateSold = dateSold;
+    this.currentPrice = currentPrice;
   }
-  
+}

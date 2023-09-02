@@ -1,61 +1,81 @@
 import { Component, OnInit } from '@angular/core';
 import { Asset } from '../../../models/Asset';
-import { DbService } from '../../../services/db.service';
-import { Observable } from 'rxjs';
-import { DocumentReference } from '@angular/fire/compat/firestore';
+import { AssetService } from '../../../services/asset.service';
+import { PriceService } from '../../../services/price.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-asset-list',
   templateUrl: './asset-list.component.html',
   styleUrls: ['./asset-list.component.css']
 })
-
 export class AssetListComponent implements OnInit {
-  assets : Asset[] = [
+  assets: Asset[] = [
     {
-      name: 'Asset 1',
-      ticker: 'A1',
-      holdings: 100,
-      quantity: 50,
-      currentPrice: 200,
+      assetName: 'AAPL',
+      ticker: 'AAPL',
+      amount: 100,
       priceBought: 100,
-      overallInvestment: 5000,
-      gain: 1000,
-      val: 20,
-      broker: 'Broker 1',
-      category: 'Category 1'
+      brokerName: 'Broker 1',
+      dateBought: new Date(),
+      dateSold: null,
+      currentPrice: 0
     },
   ];
-  
-  showForm = false;
-  newAsset: Asset = new Asset(
-    '', '', 0, 0, 0, 0, 0, 0, 0, '', ''
-  );
 
-  constructor(private dbService: DbService) {}
-
-  ngOnInit(): void {
-    this.loadAssets();
+  constructor(private assetService: AssetService,
+     private priceService: PriceService) {console.log("ctor for asset list");
   }
 
-  loadAssets(): void {
-    this.dbService.getAssets().subscribe((assets: Asset[]) => {
-      this.assets = assets;
-    });
+  showForm = false;
+  newAsset: Asset = new Asset(
+    '', // assetName
+    '', // ticker
+    0,  // priceBought
+    0,  // amount
+    '', // brokerName
+    new Date(), // dateBought
+    null, // dateSold
+    0
+  );
+
+  ngOnInit(): void {
+    this.assetService.getAssets('userId').subscribe(
+      (assets: Asset[]) => {
+        this.assets = assets;
+        this.assets.forEach(asset => {
+          this.priceService.subscribeToTicker(asset.ticker);
+        });
+      },
+      (error) => {
+        console.error('Error fetching assets:', error);
+      }
+    );
+        // Listen for price updates and update the assets array
+        this.priceService.priceUpdates.subscribe(
+          update => {
+            const assetToUpdate = this.assets.find(asset => asset.ticker === update.ticker);
+            if (assetToUpdate) {
+              assetToUpdate.currentPrice = update.price;
+            }
+          }
+        );
   }
 
   onAssetAdded(): void {
-    //TODO: add userid
-    this.dbService.addAsset("1" ,this.newAsset).then(
-      (documentRef: DocumentReference<Asset>) => {
-        // Process the returned document reference here
-        console.log(documentRef);
-      },
-      (error) => {
-        // Handle any errors that occurred during the addition
-        console.error('Error adding asset:', error);
-      }
-    );
+    this.assets.push(this.newAsset);
+    this.priceService.subscribeToTicker(this.newAsset.ticker);
+
+    this.newAsset = new Asset(
+      '', // assetName
+      '', // ticker
+      0,  // priceBought
+      0,  // amount
+      '', // brokerName
+      new Date(), // dateBought
+      null, // dateSold
+      0
+    ); // Reset the new asset object
   }
 
   openModal(): void {
@@ -65,7 +85,14 @@ export class AssetListComponent implements OnInit {
   closeModal(): void {
     this.showForm = false;
     this.newAsset = new Asset(
-      '', '', 0, 0, 0, 0, 0, 0, 0, '', ''
-    ); // Reset the new asset object
+      '', // assetName
+      '', // ticker
+      0,  // priceBought
+      0,  // amount
+      '', // brokerName
+      new Date(), // dateBought
+      null,
+      0 // dateSold
+    ); // Reset the new asset objecty
   }
 }

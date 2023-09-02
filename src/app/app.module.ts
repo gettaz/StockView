@@ -5,9 +5,9 @@ import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
 import { PagenotfoundComponent } from './components/pagenotfound/pagenotfound.component';
 import { AssetsModule } from './components/assets/assets.module';
-import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import { firebaseConfig } from './firebase-config';
+import { AssetService } from './services/asset.service';
+import { HttpClientModule } from '@angular/common/http'; 
+import { PriceService } from './services/price.service';
 
 @NgModule({
   declarations: [
@@ -16,10 +16,9 @@ import { firebaseConfig } from './firebase-config';
     PagenotfoundComponent
   ],
   imports: [
+    HttpClientModule,
     BrowserModule,
     AssetsModule, 
-    AngularFireModule.initializeApp(firebaseConfig), 
-    AngularFirestoreModule ,
     RouterModule.forRoot([
       {path: 'welcome', component: WelcomeComponent},
       {path: 'assets', loadChildren: () => import('./components/assets/assets.module').then(m => m.AssetsModule)}, // Lazy loading AssetsModule
@@ -27,6 +26,7 @@ import { firebaseConfig } from './firebase-config';
       {path: '**', component: PagenotfoundComponent}
     ])
   ],
+  providers: [AssetService, PriceService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
