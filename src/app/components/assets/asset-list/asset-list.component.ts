@@ -11,36 +11,15 @@ import { Subscription } from 'rxjs';
 })
 export class AssetListComponent implements OnInit {
   assets: Asset[] = [
-    {
-      assetName: 'AAPL',
-      ticker: 'AAPL',
-      amount: 100,
-      priceBought: 100,
-      brokerName: 'Broker 1',
-      dateBought: new Date(),
-      dateSold: null,
-      currentPrice: 0
-    },
-    {
-      assetName: 'Bitcoin',
-      ticker: 'BINANCE:BTCUSDT',
-      amount: 100,
-      priceBought: 100,
-      brokerName: 'Broker 1',
-      dateBought: new Date(),
-      dateSold: null,
-      currentPrice: 0
-    },
-    {
-      assetName: 'TQQQ',
-      ticker: 'TQQQ',
-      amount: 100,
-      priceBought: 100,
-      brokerName: 'Broker 1',
-      dateBought: new Date(),
-      dateSold: null,
-      currentPrice: 0
-    }
+    new Asset(
+      'AAPL', 'AAPL', 100, 100, 'Broker 1', new Date(), null, 0, null
+    ),
+    new Asset(
+      'Bitcoin', 'BINANCE:BTCUSDT', 100, 100, 'Broker 1', new Date(), null, 0, 40000
+    ),
+    new Asset(
+      'TQQQ', 'TQQQ', 100, 40, 'Broker 1', new Date(), null, 0, null
+    )
   ];
 
   constructor(private assetService: AssetService,
@@ -56,7 +35,8 @@ export class AssetListComponent implements OnInit {
     '', // brokerName
     new Date(), // dateBought
     null, // dateSold
-    0
+    0,   // currentPrice
+    null // priceSold - Add this line
   );
 
   ngOnInit(): void {
@@ -97,7 +77,7 @@ export class AssetListComponent implements OnInit {
   onAssetAdded(): void {
     this.assets.push(this.newAsset);
     this.priceService.subscribeToTicker(this.newAsset.ticker);
-
+  
     this.newAsset = new Asset(
       '', // assetName
       '', // ticker
@@ -106,7 +86,8 @@ export class AssetListComponent implements OnInit {
       '', // brokerName
       new Date(), // dateBought
       null, // dateSold
-      0
+      0,   // currentPrice
+      null // priceSold - Add this line
     ); // Reset the new asset object
   }
 
@@ -123,8 +104,9 @@ export class AssetListComponent implements OnInit {
       0,  // amount
       '', // brokerName
       new Date(), // dateBought
-      null,
-      0 // dateSold
-    ); // Reset the new asset objecty
+      null, // dateSold
+      0,   // currentPrice
+      null // priceSold - Add this line
+    ); // Reset the new asset object
   }
 }

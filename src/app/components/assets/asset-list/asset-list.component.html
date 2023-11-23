@@ -2,12 +2,14 @@
   <tr>
     <th>Asset Name</th>
     <th>Ticker</th>
-    <th>Price Bought</th>
+    <th>Price Bought $</th>
     <th>Amount</th>
     <th>Broker Name</th>
     <th>Date Bought</th>
     <th>Date Sold</th>
-    <th>Price</th>
+    <th>Current Asset Price</th>
+    <th>Price Sold</th>
+    <th>Gain</th>
   </tr>
   <tr *ngFor="let asset of assets">
     <td>{{ asset.assetName }}</td>
@@ -18,6 +20,8 @@
     <td>{{ asset.dateBought }}</td>
     <td>{{ asset.dateSold }}</td>
     <td>{{ asset.currentPrice }}</td>
+    <td>{{ asset.priceSold }}</td>
+    <td>{{ asset.calculateGain() | currency }}</td>
   </tr>
 </table>
 

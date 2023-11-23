@@ -7,7 +7,13 @@ export class Asset {
   dateBought: Date;
   dateSold: Date | null;
   currentPrice: number;
+  priceSold: number | null;
 
+  // Method to calculate the gain
+  calculateGain(): number {
+    let finalPrice = this.priceSold !== null ? this.priceSold : this.currentPrice;
+    return (finalPrice - this.priceBought) * this.amount;
+  }
   constructor(
     assetName: string,
     ticker: string,
@@ -16,7 +22,8 @@ export class Asset {
     brokerName: string,
     dateBought: Date,
     dateSold: Date | null,
-    currentPrice: number
+    currentPrice: number,
+    priceSold: number | null
   ) {
     this.assetName = assetName;
     this.ticker = ticker;
@@ -26,5 +33,6 @@ export class Asset {
     this.dateBought = dateBought;
     this.dateSold = dateSold;
     this.currentPrice = currentPrice;
+    this.priceSold = priceSold;
   }
 }
