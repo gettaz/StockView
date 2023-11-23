@@ -21,6 +21,26 @@ export class AssetListComponent implements OnInit {
       dateSold: null,
       currentPrice: 0
     },
+    {
+      assetName: 'Bitcoin',
+      ticker: 'BINANCE:BTCUSDT',
+      amount: 100,
+      priceBought: 100,
+      brokerName: 'Broker 1',
+      dateBought: new Date(),
+      dateSold: null,
+      currentPrice: 0
+    },
+    {
+      assetName: 'TQQQ',
+      ticker: 'TQQQ',
+      amount: 100,
+      priceBought: 100,
+      brokerName: 'Broker 1',
+      dateBought: new Date(),
+      dateSold: null,
+      currentPrice: 0
+    }
   ];
 
   constructor(private assetService: AssetService,
@@ -40,26 +60,38 @@ export class AssetListComponent implements OnInit {
   );
 
   ngOnInit(): void {
+    // Comment out the service call and use hardcoded assets
+    /*
     this.assetService.getAssets('userId').subscribe(
       (assets: Asset[]) => {
         this.assets = assets;
         this.assets.forEach(asset => {
           this.priceService.subscribeToTicker(asset.ticker);
+          this.priceService.getCurrentPrice(asset.ticker);
         });
       },
       (error) => {
         console.error('Error fetching assets:', error);
       }
     );
-        // Listen for price updates and update the assets array
-        this.priceService.priceUpdates.subscribe(
-          update => {
-            const assetToUpdate = this.assets.find(asset => asset.ticker === update.ticker);
-            if (assetToUpdate) {
-              assetToUpdate.currentPrice = update.price;
-            }
-          }
-        );
+    */
+
+    // Hardcoded assets are already initialized, so no need to fetch from service
+    this.assets.forEach(asset => {
+      this.priceService.subscribeToTicker(asset.ticker);
+      this.priceService.getCurrentPrice(asset.ticker);
+    });
+
+    // You can still keep the subscription to price updates if needed
+    this.priceService.priceUpdates.subscribe(
+      update => {
+        console.log('Price update received:', update);
+        const assetToUpdate = this.assets.find(asset => asset.ticker === update.ticker);
+        if (assetToUpdate) {
+          assetToUpdate.currentPrice = update.price;
+        }
+      }
+    );
   }
 
   onAssetAdded(): void {
