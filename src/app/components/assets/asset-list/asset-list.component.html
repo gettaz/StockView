@@ -46,8 +46,23 @@
             <input type="text" class="form-control" id="assetName" [(ngModel)]="newAsset.assetName" name="assetName" required>
           </div>
           <div class="form-group">
+            <!-- Label for the Ticker input -->
             <label for="ticker">Ticker:</label>
-            <input type="text" class="form-control" id="ticker" [(ngModel)]="newAsset.ticker" name="ticker" required>
+          
+            <!-- Ticker input field with two-way data binding and input event handling -->
+            <input type="text" class="form-control" id="ticker" 
+                   [(ngModel)]="newAsset.ticker" name="ticker" required 
+                   (input)="searchTicker($any($event.target).value)">
+          
+            <!-- Dropdown for search results, visible only if there are results -->
+            <div *ngIf="tickerSearchResults.length > 0" class="dropdown">
+              <ul class="suggestions-list">
+                <li *ngFor="let result of tickerSearchResults" 
+                    (click)="selectTicker(result)">
+                  {{ result.displaySymbol }} - {{ result.description }}
+                </li>
+              </ul>
+            </div>
           </div>
           <div class="form-group">
             <label for="priceBought">Price Bought:</label>

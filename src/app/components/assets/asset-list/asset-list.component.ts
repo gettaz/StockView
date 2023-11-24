@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Asset } from '../../../models/Asset';
+import { Subject } from 'rxjs';
 import { AssetService } from '../../../services/asset.service';
 import { PriceService } from '../../../services/price.service';
 import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-asset-list',
@@ -10,6 +12,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./asset-list.component.css']
 })
 export class AssetListComponent implements OnInit {
+  private searchTerms = new Subject<string>();
+
   assets: Asset[] = [
     new Asset(
       'AAPL', 'AAPL', 100, 100, 'Broker 1', new Date(), null, 0, null
@@ -21,6 +25,7 @@ export class AssetListComponent implements OnInit {
       'TQQQ', 'TQQQ', 100, 40, 'Broker 1', new Date(), null, 0, null
     )
   ];
+  tickerSearchResults: any[] = []; // Array to store search results
 
   constructor(private assetService: AssetService,
      private priceService: PriceService) {console.log("ctor for asset list");
@@ -40,6 +45,19 @@ export class AssetListComponent implements OnInit {
   );
 
   ngOnInit(): void {
+  
+      // Debounce search term input before making the API call
+      this.searchTerms.pipe(
+        debounceTime(300),        // Wait 300ms after each keystroke before considering the term
+        distinctUntilChanged(),   // Ignore if next search term is same as previous
+        switchMap((term: string) => this.priceService.searchTickers(term)),
+      ).subscribe(results => {
+        this.tickerSearchResults = results.result.slice(0, 5); // Keep only top 5 results
+        console.log('Search results my array:', this.tickerSearchResults); // Update the list of suggestions
+        console.log('Search results my results:', results); // Update the list of suggestions
+
+      });
+    
     // Comment out the service call and use hardcoded assets
     /*
     this.assetService.getAssets('userId').subscribe(
@@ -75,6 +93,7 @@ export class AssetListComponent implements OnInit {
   }
 
   onAssetAdded(): void {
+    
     this.assets.push(this.newAsset);
     this.priceService.subscribeToTicker(this.newAsset.ticker);
   
@@ -90,11 +109,17 @@ export class AssetListComponent implements OnInit {
       null // priceSold - Add this line
     ); // Reset the new asset object
   }
-
+  searchTicker(term: string): void {
+    console.log("searchTicker", term);
+    this.searchTerms.next(term);
+  }
   openModal(): void {
     this.showForm = true;
   }
-
+  selectTicker(result: any): void {
+    this.newAsset.ticker = result.displaySymbol;
+    this.tickerSearchResults = []; // Clear the results after selection
+  }
   closeModal(): void {
     this.showForm = false;
     this.newAsset = new Asset(

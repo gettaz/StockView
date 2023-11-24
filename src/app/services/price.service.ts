@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PriceService {
+
   private webSocket: WebSocket;
   private isConnectionOpen = false;
   private messageQueue: string[] = [];
@@ -53,7 +57,18 @@ export class PriceService {
       this.messageQueue.push(message);
     }
   }
+  searchTickers(term: string): Observable<any> {
+    console.log("searchTicker in price service", term);
 
+    if (!term.trim()) {
+      // If not search term, return empty array.
+      return of([]);
+    }
+    return this.http.get<any>(`https://api.finnhub.io/api/v1/search?q=${term}&token=ch1hvi9r01qn6tg76npgch1hvi9r01qn6tg76nq0`)
+        .pipe(
+            tap(response => console.log('Response from searchTickers:', response))
+        );
+}
   private processMessageQueue() {
     while (this.messageQueue.length > 0) {
       const message = this.messageQueue.shift();
