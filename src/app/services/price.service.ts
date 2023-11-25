@@ -1,9 +1,11 @@
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { SearchResult } from '../models/SearchResult'; // Adjust the import path as needed
 
 @Injectable({
   providedIn: 'root'
@@ -57,18 +59,52 @@ export class PriceService {
       this.messageQueue.push(message);
     }
   }
-  searchTickers(term: string): Observable<any> {
-    console.log("searchTicker in price service", term);
 
+  searchTickers(term: string): Observable<SearchResult[]> {
+    console.log("searchTicker in price service", term);
+  
     if (!term.trim()) {
-      // If not search term, return empty array.
+      // If not search term, return an empty array.
       return of([]);
     }
-    return this.http.get<any>(`https://api.finnhub.io/api/v1/search?q=${term}&token=ch1hvi9r01qn6tg76npgch1hvi9r01qn6tg76nq0`)
-        .pipe(
-            tap(response => console.log('Response from searchTickers:', response))
-        );
-}
+  
+    return this.http.get<any[]>(`https://api.finnhub.io/api/v1/search?q=${term}&token=ch1hvi9r01qn6tg76npgch1hvi9r01qn6tg76nq0`).pipe(
+      tap((response: any) => {
+        console.log('Search results:', response);
+      }),
+      map((response: any) => {
+        if (Array.isArray(response.result)) {
+          // Filter results by type "Common Stock," "Crypto," or "ETP"
+          const filteredResults = response.result.filter((result: SearchResult) => result.type === "Common Stock" || result.type === "Crypto" || result.type === "ETP");
+  
+          // Sort the filtered results so that "Common Stock" items appear first
+          filteredResults.sort((a: SearchResult, b: SearchResult) => {
+            if (a.type === "Common Stock" && b.type !== "Common Stock") {
+              return -1; // "Common Stock" items come first
+            } else if (a.type !== "Common Stock" && b.type === "Common Stock") {
+              return 1; // "Common Stock" items come first
+            } else {
+              return 0; // No change in order for other types
+            }
+          });
+  
+          console.log('Filtered and sorted results:', filteredResults); // Log the filtered and sorted results
+  
+          return filteredResults;
+        } else {
+          // Log the unexpected response format
+          console.error('Unexpected response format:', response);
+          throw new Error('Invalid response format');
+        }
+      }),
+      catchError((error) => {
+        console.error('Error fetching search results:', error);
+        return throwError(error);
+      })
+    );
+  }
+  
+  
   private processMessageQueue() {
     while (this.messageQueue.length > 0) {
       const message = this.messageQueue.shift();
@@ -79,21 +115,23 @@ export class PriceService {
     }
   }
 
-  getCurrentPrice(ticker: string): void {
-    // Replace with the actual REST API endpoint and your API key
-    const url = `https://api.finnhub.io/api/v1/quote?symbol=${ticker}&token=ch1hvi9r01qn6tg76npgch1hvi9r01qn6tg76nq0`;
+  getCurrentPrice(ticker: string): Observable<number> {
+    console.log('getting price of:', ticker);
 
-    this.http.get(url).subscribe({
-      next: (response: any) => {
-        const currentPrice = response.c; // Assuming 'c' is the property for current price
-        this.priceUpdates.next({ ticker, price: currentPrice });
-      },
-      error: (error) => {
+    const url = `https://api.finnhub.io/api/v1/quote?symbol=${ticker}&token=ch1hvi9r01qn6tg76npgch1hvi9r01qn6tg76nq0`;
+  
+    return this.http.get(url).pipe(
+      map((response: any) => {
+        if (response && response.c) {
+          return response.c; // Assuming 'c' is the property for current price
+        } else {
+          throw new Error('Invalid response format');
+        }
+      }),
+      catchError((error) => {
         console.error('Error fetching current price:', error);
-      },
-      complete: () => {
-        console.log('Completed fetching current price');
-      }
-    });
+        return throwError(error);
+      })
+    );
   }
 }

@@ -8,6 +8,7 @@ import { AssetsModule } from './components/assets/assets.module';
 import { AssetService } from './services/asset.service';
 import { HttpClientModule } from '@angular/common/http'; 
 import { PriceService } from './services/price.service';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { PriceService } from './services/price.service';
     HttpClientModule,
     BrowserModule,
     AssetsModule, 
+    FormsModule,
     RouterModule.forRoot([
       {path: 'welcome', component: WelcomeComponent},
       {path: 'assets', loadChildren: () => import('./components/assets/assets.module').then(m => m.AssetsModule)}, // Lazy loading AssetsModule

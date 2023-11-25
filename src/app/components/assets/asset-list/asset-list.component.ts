@@ -52,10 +52,8 @@ export class AssetListComponent implements OnInit {
         distinctUntilChanged(),   // Ignore if next search term is same as previous
         switchMap((term: string) => this.priceService.searchTickers(term)),
       ).subscribe(results => {
-        this.tickerSearchResults = results.result.slice(0, 5); // Keep only top 5 results
-        console.log('Search results my array:', this.tickerSearchResults); // Update the list of suggestions
-        console.log('Search results my results:', results); // Update the list of suggestions
-
+        console.log("searchTicker back", results);
+        this.tickerSearchResults = results.slice(0, 5); // Keep only top 5 results
       });
     
     // Comment out the service call and use hardcoded assets
@@ -93,22 +91,39 @@ export class AssetListComponent implements OnInit {
   }
 
   onAssetAdded(): void {
-    
-    this.assets.push(this.newAsset);
+    console.log('onAssetAdded');
     this.priceService.subscribeToTicker(this.newAsset.ticker);
   
-    this.newAsset = new Asset(
-      '', // assetName
-      '', // ticker
-      0,  // priceBought
-      0,  // amount
-      '', // brokerName
-      new Date(), // dateBought
-      null, // dateSold
-      0,   // currentPrice
-      null // priceSold - Add this line
-    ); // Reset the new asset object
+    // Fetch the current price for the new asset
+    this.priceService.getCurrentPrice(this.newAsset.ticker).subscribe(
+      (currentPrice: number) => {
+        console.log('Current price for :', this.newAsset.ticker, currentPrice);
+  
+        // Set the current price for the new asset
+        this.newAsset.currentPrice = currentPrice;
+  
+        // Push the new asset into the array after setting its current price
+        this.assets.push(this.newAsset);
+  
+        // Reset the new asset object
+        this.newAsset = new Asset(
+          '', // assetName
+          '', // ticker
+          0,  // priceBought
+          0,  // amount
+          '', // brokerName
+          new Date(), // dateBought
+          null, // dateSold
+          0,   // currentPrice
+          null // priceSold - Add this line
+        );
+      },
+      (error) => {
+        console.error('Error:', error); // Log the error
+      }
+    );
   }
+  
   searchTicker(term: string): void {
     console.log("searchTicker", term);
     this.searchTerms.next(term);
