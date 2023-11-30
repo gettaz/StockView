@@ -1,42 +1,48 @@
 ﻿<div class="card">
   <div class="card-header">
-    {{pageTitle}}
+    {{ pageTitle }}
   </div>
   <div class="card-body">
     <div class="container-fluid">
-      <!-- ... other elements ... -->
-
-      <!-- Charts Container -->
-      <div class="charts-flex-container">
+      
+      <!-- Container for Pie Chart and its Button -->
+      <div class="chart-with-button">
         <!-- Pie Chart Canvas -->
         <div class="chart-container">
           <canvas id="myChart"></canvas>
         </div>
+        <!-- Button for Pie Chart -->
+        <div class="text-center">
+          <button class="btn btn-primary" (click)="toggleChartData()">
+            {{ showCategoryData ? 'Show Broker Data' : 'Show Category Data' }}
+          </button>
+        </div>
+      </div>
 
+      <!-- Container for Timeline Chart and its Toggles -->
+      <div class="chart-with-toggles">
         <!-- Timeline Chart Canvas -->
         <div class="chart-container">
           <canvas id="timelineChart"></canvas>
         </div>
-
+        <!-- Toggle Buttons for Timeline Chart -->
+        <div class="text-center">
+          <mat-button-toggle-group>
+            <mat-button-toggle (click)="toggleView('all')">All</mat-button-toggle>
+            <mat-button-toggle (click)="toggleView('category')">Category</mat-button-toggle>
+            <mat-button-toggle (click)="toggleView('broker')">Broker</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
       </div>
+
+      <!-- Dropdown for Time Span -->
       <select [(ngModel)]="currentTimeSpan" (change)="onTimeSpanChange()">
         <option value="7days">Last 7 Days</option>
         <option value="month">Last Month</option>
         <option value="YTD">Year To Date</option>
         <option value="all">All Time</option>
       </select>
-      <!-- Toggle Buttons -->
-      <div class="text-center">
-        <button class="btn btn-primary" (click)="toggleChartData()">
-          {{ showCategoryData ? 'Show Broker Data' : 'Show Category Data' }}
-        </button>
-        <mat-button-toggle-group>
-          <mat-button-toggle (click)="toggleView('all')">All</mat-button-toggle>
-          <mat-button-toggle (click)="toggleView('category')">Category</mat-button-toggle>
-          <mat-button-toggle (click)="toggleView('broker')">Broker</mat-button-toggle>
-        </mat-button-toggle-group>
-      
-      </div>
+
     </div>
   </div>
 </div>
