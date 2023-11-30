@@ -1,0 +1,29 @@
+.charts-flex-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.chart-container {
+  flex: 1; /* Each chart container takes up equal space */
+  max-width: 40vw; /* Adjust the width as needed */
+  height: 40vh; /* Adjust the height as needed */
+}
+
+/* Ensure the canvas fills its container */
+.chart-container canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .charts-flex-container {
+    flex-direction: column;
+  }
+
+  .chart-container {
+    max-width: 80vw; /* Adjust for smaller screens */
+    margin-bottom: 20px; /* Space between charts */
+  }
+}

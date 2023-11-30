@@ -28,11 +28,8 @@ export class PriceService {
 
     this.webSocket.addEventListener('message', (event) => {
       const msg = JSON.parse(event.data);
-      console.log('Received message:', msg);
-
       if (msg.type === 'trade') {
         msg.data.forEach((trade: { s: string; p: number }) => {
-          console.log('Trade data:', trade);
           this.priceUpdates.next({ ticker: trade.s, price: trade.p });
         });
       }
@@ -75,7 +72,7 @@ export class PriceService {
       map((response: any) => {
         if (Array.isArray(response.result)) {
           // Filter results by type "Common Stock," "Crypto," or "ETP"
-          const filteredResults = response.result.filter((result: SearchResult) => result.type === "Common Stock" || result.type === "Crypto" || result.type === "ETP");
+          const filteredResults = response.result.filter((result: SearchResult) => result.type === "Common Stock" || result.type === "ETP");
   
           // Sort the filtered results so that "Common Stock" items appear first
           filteredResults.sort((a: SearchResult, b: SearchResult) => {

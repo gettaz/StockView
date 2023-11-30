@@ -8,6 +8,8 @@ export class Asset {
   dateSold: Date | null;
   currentPrice: number;
   priceSold: number | null;
+  category: string;
+
 
   // Method to calculate the gain
   calculateGain(): number {
@@ -23,7 +25,8 @@ export class Asset {
     dateBought: Date,
     dateSold: Date | null,
     currentPrice: number,
-    priceSold: number | null
+    priceSold: number | null,
+    category: string = 'No Category'
   ) {
     this.assetName = assetName;
     this.ticker = ticker;
@@ -34,5 +37,6 @@ export class Asset {
     this.dateSold = dateSold;
     this.currentPrice = currentPrice;
     this.priceSold = priceSold;
+    this.category = category;
   }
 }

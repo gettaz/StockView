@@ -4,15 +4,38 @@
   </div>
   <div class="card-body">
     <div class="container-fluid">
-      <div class="text-center">
-        <img src="./assets/wabadaba.jfif"
-             class="img-responsive center-block"
-             style="max-height:300px;padding-bottom:50px" />
-      </div>
+      <!-- ... other elements ... -->
 
-      <div class="text-center">Developed by:</div>
+      <!-- Charts Container -->
+      <div class="charts-flex-container">
+        <!-- Pie Chart Canvas -->
+        <div class="chart-container">
+          <canvas id="myChart"></canvas>
+        </div>
+
+        <!-- Timeline Chart Canvas -->
+        <div class="chart-container">
+          <canvas id="timelineChart"></canvas>
+        </div>
+
+      </div>
+      <select [(ngModel)]="currentTimeSpan" (change)="onTimeSpanChange()">
+        <option value="7days">Last 7 Days</option>
+        <option value="month">Last Month</option>
+        <option value="YTD">Year To Date</option>
+        <option value="all">All Time</option>
+      </select>
+      <!-- Toggle Buttons -->
       <div class="text-center">
-        <h3>Getta</h3>
+        <button class="btn btn-primary" (click)="toggleChartData()">
+          {{ showCategoryData ? 'Show Broker Data' : 'Show Category Data' }}
+        </button>
+        <mat-button-toggle-group>
+          <mat-button-toggle (click)="toggleView('all')">All</mat-button-toggle>
+          <mat-button-toggle (click)="toggleView('category')">Category</mat-button-toggle>
+          <mat-button-toggle (click)="toggleView('broker')">Broker</mat-button-toggle>
+        </mat-button-toggle-group>
+      
       </div>
     </div>
   </div>

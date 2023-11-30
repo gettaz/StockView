@@ -9,6 +9,7 @@
     <th>Date Sold</th>
     <th>Current Asset Price</th>
     <th>Price Sold</th>
+    <th>Category</th>
     <th>Gain</th>
   </tr>
   <tr *ngFor="let asset of assets">
@@ -21,6 +22,7 @@
     <td>{{ asset.dateSold }}</td>
     <td>{{ asset.currentPrice }}</td>
     <td>{{ asset.priceSold }}</td>
+    <td>{{ asset.category }}</td>
     <td>{{ asset.calculateGain() | currency }}</td>
   </tr>
 </table>
@@ -79,7 +81,7 @@
           <!-- Add more fields as needed -->
           <!-- Submit and cancel buttons -->
           <div class="form-group">
-            <button type="submit" class="btn btn-primary" (click)="onAssetAdded()">Submit</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
             <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
           </div>
         </form>
