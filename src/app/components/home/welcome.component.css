@@ -1,29 +1,138 @@
+/* Container for Charts and Controls */
+/* Specific Canvas Size */
+#myChart {
+  width: 60% !important; /* Full width */
+  height: auto !important;
+  margin:auto /* Auto height for responsive aspect ratio */
+}
+#timelineChart {
+  width: 100% !important; /* Full width */
+  height: auto !important; /* Auto height for responsive aspect ratio */
+}
 .charts-flex-container {
   display: flex;
-  justify-content: space-around;
-  align-items: center;
+  flex-wrap: wrap; /* Allow items to wrap */
+  gap: 10px; /* Space between items */
+  justify-content: center; /* Center items */
 }
 
+.chart-with-button {
+  display: flex; /* Use flexbox */
+  align-items: center; /* Align items vertically in the center */
+  justify-content: start; /* Align items to the start (left) */
+  flex-wrap: wrap; /* Allow items to wrap */
+  gap: 10px; /* Space between items */
+  flex: 1; /* Flex grow */
+  min-width: 300px; /* Minimum width */
+  max-width: 100%; /* Maximum width on narrow screens */
+  margin: auto; /* Centering */
+  transition: width 0.5s ease, height 0.5s ease; /* Smooth transition for width and height */
+}
+.chart-with-toggles {
+  flex: 1; /* Flex grow */
+  min-width: 300px; /* Minimum width before wrapping */
+  max-width: 750px; /* Maximum width */
+  margin: 0 auto; /* Centering */
+  transition: width 0.5s ease; /* Smooth transition for width */
+}
+
+/* Chart Canvas Container */
 .chart-container {
-  flex: 1; /* Each chart container takes up equal space */
-  max-width: 40vw; /* Adjust the width as needed */
-  height: 40vh; /* Adjust the height as needed */
+  width: 100%; /* Full width of its container */
+  height: auto; /* Auto height for responsive aspect ratio */
+  margin-bottom: 10px; /* Space below the chart */
 }
 
-/* Ensure the canvas fills its container */
-.chart-container canvas {
-  width: 100%;
-  height: 100%;
+/* Button Container - Centering Buttons */
+.button-container {
+  display: flex;
+  justify-content: center; /* Horizontally center buttons */
 }
 
-/* Responsive design for smaller screens */
-@media (max-width: 768px) {
+/* Responsive Design for Larger Screens */
+@media (min-width: 768px) {
   .charts-flex-container {
-    flex-direction: column;
+    flex-direction: row; /* Side-by-side layout */
+    justify-content: space-around; /* Space out items */
   }
 
-  .chart-container {
-    max-width: 80vw; /* Adjust for smaller screens */
-    margin-bottom: 20px; /* Space between charts */
+  .chart-with-button {
+    max-width: none; /* Remove max-width restriction */
+    width: 45%; /* Adjust width for charts */
+    height: auto; /* Allow height to adjust proportionally */
   }
+
+  .chart-with-toggles {
+    width: 45%; /* Adjust width for charts */
+    padding-top: 40px; /* Add padding to the top */
+  }
+
+  .switch-container {
+    width: 25%; /* Adjust width for charts */
+    padding-top: 40px; /* Add padding to the top */
+  }
+}
+
+/* Toggle Switch Styling */
+.switch-container {
+  text-align: center;
+  width: 30px; /* Reduced width of the switch container */
+  margin-left: 90px; /* Added margin for spacing to the left */
+  margin-top: 60px; /* Added margin for spacing to the left */
+
+  flex: 0 0 auto; /* Do not grow or shrink, maintain actual size */
+}
+
+.chart-toggle {
+  display: none; /* Hide the default checkbox input */
+}
+
+.chart-label {
+  cursor: pointer;
+  width: 40px; /* Reduced width of the switch */
+  height: 80px; /* Reduced height of the switch */
+  background: grey;
+  display: block;
+  border-radius: 50px; /* Adjust for rounded corners */
+  position: relative;
+  text-indent: 0; /* Reset text indentation */
+  line-height: 50px; /* Line height for vertical centering of text */
+  color: black; /* Text color changed to black */
+}
+
+.chart-label:after {
+  content: '';
+  position: absolute;
+  top: 90%; /* Adjust the top value to fine-tune vertical centering */
+  left: 5px; /* Adjusted left position for the toggle circle */
+  transform: translateY(-50%); /* Center vertically using transform */
+  width: 20px; /* Reduced width of the toggle circle */
+  height: 20px; /* Reduced height of the toggle circle */
+  background: #fff;
+  border-radius: 50%;
+  margin-top: -20px; /* Add negative margin to the top for better alignment */
+  transition: 0.3s;
+}
+
+
+.chart-toggle:checked + .chart-label:after {
+  top: calc(100% - 25px); /* Move to the bottom */
+  transform: translateY(-100%);
+}
+
+.chart-label .broker, .chart-label .categories {
+  position: absolute;
+  width: 100%;
+  text-align: right;
+  color: black; /* Text color changed to black */
+}
+
+.chart-label .broker {
+  top: 0;
+  left: 35px; /* Adjust the left position to move it to the right */
+}
+
+.chart-label .categories {
+  bottom: 0;
+  left: 35px; /* Adjust the left position to move it to the right */
 }

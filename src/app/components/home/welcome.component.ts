@@ -3,7 +3,6 @@ import { ChartDataItem } from '../../models/ChartDataItem';
 import { PortfolioTimelineSummary } from 'src/app/models/PortfolioTimelineSummary';
 import { Chart, registerables } from 'chart.js';
 import { TimelineDataItem } from 'src/app/models/TimelineDataItem';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 Chart.register(...registerables);
 
@@ -114,7 +113,9 @@ export class WelcomeComponent implements OnInit {
         this.timelineChart = new Chart(ctx, {
           type: 'line',
           data: chartData,
+          
           options: {
+            responsive: true,
             scales: {
               x: {
                 type: 'time',
@@ -150,8 +151,9 @@ export class WelcomeComponent implements OnInit {
         this.pieChart = new Chart(ctx, {
           type: 'pie',
           data: chartData,
+          
           options: {
-            // Chart options
+            responsive: true
           }
         });
       } else {

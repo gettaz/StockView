@@ -4,45 +4,47 @@
   </div>
   <div class="card-body">
     <div class="container-fluid">
-      
-      <!-- Container for Pie Chart and its Button -->
-      <div class="chart-with-button">
-        <!-- Pie Chart Canvas -->
-        <div class="chart-container">
-          <canvas id="myChart"></canvas>
-        </div>
+      <div class="charts-flex-container">
+        <!-- Container for Pie Chart and its Button -->
         <!-- Button for Pie Chart -->
-        <div class="text-center">
-          <button class="btn btn-primary" (click)="toggleChartData()">
-            {{ showCategoryData ? 'Show Broker Data' : 'Show Category Data' }}
-          </button>
+        <div class="switch-container">
+          <input type="checkbox" id="chartToggle" class="chart-toggle" (change)="toggleChartData()">
+          <label for="chartToggle" class="chart-label">
+            <span class="broker">Broker</span>
+            <span class="categories">Categories</span>
+          </label>
+        </div>
+        <div class="chart-with-button">
+          <!-- Pie Chart Canvas -->
+          <div class="chart-container">
+            <canvas id="myChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Container for Timeline Chart and its Toggles -->
+        <div class="chart-with-toggles">
+          <!-- Dropdown for Time Span -->
+          <select [(ngModel)]="currentTimeSpan" (change)="onTimeSpanChange()">
+            <option value="7days">Last 7 Days</option>
+            <option value="month">Last Month</option>
+            <option value="YTD">Year To Date</option>
+            <option value="all">All Time</option>
+          </select>
+          <!-- Timeline Chart Canvas -->
+          <div class="chart-container">
+            <canvas id="timelineChart"></canvas>
+          </div>
+          <!-- Toggle Buttons for Timeline Chart -->
+          <div class="text-center">
+            <mat-button-toggle-group>
+              <mat-button-toggle (click)="toggleView('all')">All</mat-button-toggle>
+              <mat-button-toggle (click)="toggleView('category')">Category</mat-button-toggle>
+              <mat-button-toggle (click)="toggleView('broker')">Broker</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
         </div>
       </div>
-
-      <!-- Container for Timeline Chart and its Toggles -->
-      <div class="chart-with-toggles">
-        <!-- Timeline Chart Canvas -->
-        <div class="chart-container">
-          <canvas id="timelineChart"></canvas>
-        </div>
-        <!-- Toggle Buttons for Timeline Chart -->
-        <div class="text-center">
-          <mat-button-toggle-group>
-            <mat-button-toggle (click)="toggleView('all')">All</mat-button-toggle>
-            <mat-button-toggle (click)="toggleView('category')">Category</mat-button-toggle>
-            <mat-button-toggle (click)="toggleView('broker')">Broker</mat-button-toggle>
-          </mat-button-toggle-group>
-        </div>
-      </div>
-
-      <!-- Dropdown for Time Span -->
-      <select [(ngModel)]="currentTimeSpan" (change)="onTimeSpanChange()">
-        <option value="7days">Last 7 Days</option>
-        <option value="month">Last Month</option>
-        <option value="YTD">Year To Date</option>
-        <option value="all">All Time</option>
-      </select>
-
+      
     </div>
   </div>
 </div>
