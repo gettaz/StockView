@@ -16,6 +16,7 @@ export class PriceService {
   private isConnectionOpen = false;
   private messageQueue: string[] = [];
   public priceUpdates = new Subject<{ ticker: string, price: number }>();
+  public usTickers: string[] = [];
 
   constructor(private http: HttpClient) {
     this.webSocket = new WebSocket('wss://ws.finnhub.io?token=ch1hvi9r01qn6tg76npgch1hvi9r01qn6tg76nq0');
@@ -43,8 +44,29 @@ export class PriceService {
       console.log('WebSocket connection closed');
       this.isConnectionOpen = false;
     });
-  }
 
+    this.fetchUsTickers().subscribe({
+      next: tickers => console.log('US tickers fetched', tickers),
+      error: error => console.error('Error fetching US tickers', error)
+    });
+    
+   }
+  fetchUsTickers(): Observable<string[]> {
+    const url = `https://api.finnhub.io/api/v1/stock/symbol?exchange=US&token=ch1hvi9r01qn6tg76npgch1hvi9r01qn6tg76nq0`;
+    return this.http.get<any[]>(url).pipe(
+      tap((response: any) => {
+        console.log('fetchUsTickers results:', response);
+      }),
+      map((response: any[]) => {
+        this.usTickers = response.map(tickerInfo => tickerInfo.symbol);
+        return this.usTickers;
+      }),
+      catchError((error) => {
+        console.error('Error fetching US tickers:', error);
+        return throwError(error);
+      })
+    );
+  }
   subscribeToTicker(ticker: string) {
     const message = JSON.stringify({ 'type': 'subscribe', 'symbol': ticker });
     console.log('Preparing to send message:', message);
@@ -70,30 +92,11 @@ export class PriceService {
         console.log('Search results:', response);
       }),
       map((response: any) => {
-        if (Array.isArray(response.result)) {
-          // Filter results by type "Common Stock," "Crypto," or "ETP"
-          const filteredResults = response.result.filter((result: SearchResult) => result.type === "Common Stock" || result.type === "ETP");
-  
-          // Sort the filtered results so that "Common Stock" items appear first
-          filteredResults.sort((a: SearchResult, b: SearchResult) => {
-            if (a.type === "Common Stock" && b.type !== "Common Stock") {
-              return -1; // "Common Stock" items come first
-            } else if (a.type !== "Common Stock" && b.type === "Common Stock") {
-              return 1; // "Common Stock" items come first
-            } else {
-              return 0; // No change in order for other types
-            }
-          });
-  
-          console.log('Filtered and sorted results:', filteredResults); // Log the filtered and sorted results
-  
-          return filteredResults;
-        } else {
-          // Log the unexpected response format
-          console.error('Unexpected response format:', response);
-          throw new Error('Invalid response format');
-        }
+        // ... existing processing code ...
+        // Filter to include only tickers that are in the usTickers list
+        return response.result.filter((result: SearchResult) => this.usTickers.includes(result.symbol));
       }),
+
       catchError((error) => {
         console.error('Error fetching search results:', error);
         return throwError(error);

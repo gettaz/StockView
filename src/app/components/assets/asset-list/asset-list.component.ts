@@ -14,7 +14,21 @@ Chart.register(...registerables);
   styleUrls: ['./asset-list.component.css']
 })
 export class AssetListComponent implements OnInit {
-  private searchTerms = new Subject<string>();
+  private searchTerms = new Subject<{ term: string, field: string }>();
+  public activeField: string | null = null;
+  private selectionMade = false;
+  private _newAsset: Asset = new Asset(
+    '', // assetName
+    '', // ticker
+    0,  // priceBought
+    0,  // amount
+    '', // brokerName
+    new Date(), // dateBought
+    null, // dateSold
+    0,   // currentPrice
+    null, // priceSold - Add this line
+    ''   // category
+  );
 
   assets: Asset[] = [
     new Asset(
@@ -35,19 +49,25 @@ export class AssetListComponent implements OnInit {
   constructor(private assetService: AssetService,
      private priceService: PriceService) {console.log("ctor for asset list");
   }
-
+  get newAsset(): Asset {
+    return this._newAsset;
+  }
+  
+  set newAsset(value: Asset) {
+    this._newAsset = new Asset(
+      value.assetName,
+      value.ticker,
+      value.priceBought,
+      value.amount,
+      value.brokerName,
+      value.dateBought,
+      value.dateSold,
+      value.currentPrice,
+      value.priceSold,
+      value.category
+    );
+  }
   showForm = false;
-  newAsset: Asset = new Asset(
-    '', // assetName
-    '', // ticker
-    0,  // priceBought
-    0,  // amount
-    '', // brokerName
-    new Date(), // dateBought
-    null, // dateSold
-    0,   // currentPrice
-    null // priceSold - Add this line
-  );
 
   ngOnInit(): void {
   
@@ -55,8 +75,8 @@ export class AssetListComponent implements OnInit {
       this.searchTerms.pipe(
         debounceTime(300),        // Wait 300ms after each keystroke before considering the term
         distinctUntilChanged(),   // Ignore if next search term is same as previous
-        switchMap((term: string) => this.priceService.searchTickers(term)),
-      ).subscribe(results => {
+        switchMap(({ term, field }) => this.priceService.searchTickers(term)),
+        ).subscribe(results => {
         console.log("searchTicker back", results);
         this.tickerSearchResults = results.slice(0, 5); // Keep only top 5 results
       });
@@ -95,6 +115,10 @@ export class AssetListComponent implements OnInit {
   }
 
   onAssetAdded(): void {
+    if (!this.selectionMade) {
+      console.error('Please select an asset name and ticker from the dropdown.');
+      return; // Prevent form submission if no valid selection has been made
+    }
     console.log('onAssetAdded');
     
     this.priceService.getCurrentPrice(this.newAsset.ticker).subscribe(
@@ -131,19 +155,25 @@ export class AssetListComponent implements OnInit {
     
   resetNewAssetForm() {
     this.newAsset = new Asset('', '', 0, 0, '', new Date(), null, 0, null);
+    this.showForm = false;
   }
   
     
-  searchTicker(term: string): void {
-    console.log("searchTicker", term);
-    this.searchTerms.next(term);
+  searchTicker(value: string, field: string): void {
+    this.selectionMade = false;
+
+    this.activeField = field;
+    this.searchTerms.next({ term: value, field: field });
   }
   openModal(): void {
     this.showForm = true;
   }
   selectTicker(result: any): void {
     this.newAsset.ticker = result.displaySymbol;
+    this.newAsset.assetName = result.description;
     this.tickerSearchResults = []; // Clear the results after selection
+    this.selectionMade = true;
+    setTimeout(() => document.getElementById('priceBought')?.focus(), 0);
   }
   closeModal(): void {
     this.showForm = false;
