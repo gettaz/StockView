@@ -3,6 +3,7 @@ import { ChartDataItem } from '../../models/ChartDataItem';
 import { PortfolioTimelineSummary } from 'src/app/models/PortfolioTimelineSummary';
 import { Chart, registerables } from 'chart.js';
 import { TimelineDataItem } from 'src/app/models/TimelineDataItem';
+import { ClassificationService } from 'src/app/services/classification.service';
 
 Chart.register(...registerables);
 
@@ -19,12 +20,11 @@ export class WelcomeComponent implements OnInit {
   public  showCategoryData = true; // Toggle between category and broker data
   private currentView: 'all' | 'category' | 'broker' = 'all'; // default view
   public currentTimeSpan : '7days' | 'month' | 'YTD' = '7days' ;
+  public chartData: ChartDataItem[] = []; // Initialize with an empty array
 
-  constructor() {}
+  constructor(private classificationService: ClassificationService) {}
 
   ngOnInit(): void {
-    this.mockFetchCategoryData();
-    this.mockFetchBrokerData();
     this.updateChartData();
     this.updateTimelineChart(this.currentTimeSpan);
     }
@@ -51,22 +51,43 @@ export class WelcomeComponent implements OnInit {
   }
 
   private updateChartData(): void {
-    const data = this.showCategoryData ? this.mockFetchCategoryData() : this.mockFetchBrokerData();
-    this.updatePieChart(data);
+    const data = this.showCategoryData ? this.FetchCategoryData() : this.FetchBrokerData();
   }
+
+
   public toggleChartData(): void {
     this.showCategoryData = !this.showCategoryData;
     this.updateChartData();
   }
-  private mockFetchCategoryData(): ChartDataItem[] {
-    // Hardcoded category data for testing
-    return [
-      { name: 'Tech', assetCount: 10 },
-      { name: 'Crypto', assetCount: 5 },
-      { name: 'Real Estate', assetCount: 7 },
-      { name: 'Stocks', assetCount: 12 },
-      // Add more categories as needed
-    ];
+
+  private FetchCategoryData(): void {
+    this.classificationService.getCategoryDistribution('userId').subscribe({
+      next: (response: any[]) => {
+        this.chartData = response.map(item => ({
+          name: item.name,
+          assetCount: item.assetCount
+        }));
+        this.updatePieChart(this.chartData);
+      },
+      error: (any) => {
+        console.error('Error fetching category data:', any);
+      }
+    });
+  }
+
+  private FetchBrokerData(): void {
+    this.classificationService.getBrokerDistribution('userId').subscribe({
+      next: (response: any[]) => {
+        this.chartData = response.map(item => ({
+          name: item.name,
+          assetCount: item.assetCount
+        }));
+        this.updatePieChart(this.chartData);
+      },
+      error: (error) => {
+        console.error('Error fetching broker data:', error);
+      }
+    });
   }
 
   private updatePieChart(data: ChartDataItem[]): void {
@@ -166,14 +187,7 @@ export class WelcomeComponent implements OnInit {
   public onTimeSpanChange(): void {
     this.updateTimelineChart(this.currentTimeSpan);
   }
-  private mockFetchBrokerData(): ChartDataItem[] {
-    // Hardcoded broker data for testing
-    return [
-      { name: 'eToro', assetCount: 15 },
-      { name: 'poalim', assetCount: 20 },
-      { name: 'broker1', assetCount: 7 },
-    ];
-  }
+
   private mockFetchCategoryTimelineData(timeRange: '7days' | 'month' | 'YTD' | 'all'): PortfolioTimelineSummary {
     let techData: TimelineDataItem[] = [];
     let cryptoData: TimelineDataItem[] = [];

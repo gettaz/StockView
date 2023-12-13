@@ -83,7 +83,6 @@ export class PriceService {
     console.log("searchTicker in price service", term);
   
     if (!term.trim()) {
-      // If not search term, return an empty array.
       return of([]);
     }
   
@@ -103,8 +102,7 @@ export class PriceService {
       })
     );
   }
-  
-  
+
   private processMessageQueue() {
     while (this.messageQueue.length > 0) {
       const message = this.messageQueue.shift();

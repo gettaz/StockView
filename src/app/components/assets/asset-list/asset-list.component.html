@@ -66,7 +66,6 @@
             <input type="text" class="form-control" id="ticker" 
             [(ngModel)]="newAsset.ticker" name="ticker" required 
             (input)="searchTicker($any($event.target).value, 'ticker')"  autocomplete="off">
-     
           
             <!-- Dropdown for search results, visible only if there are results -->
             <div *ngIf="tickerSearchResults.length > 0  && activeField === 'ticker'" class="dropdown">
@@ -87,11 +86,25 @@
             <input type="number" class="form-control" id="amount" [(ngModel)]="newAsset.amount" name="amount" required>
           </div>
           <div class="form-group">
-            <label for="brokerName">Broker Name:</label>
-            <input type="text" class="form-control" id="brokerName" [(ngModel)]="newAsset.brokerName" name="brokerName" required>
+            <label for="brokerName">Broker:</label>
+            <input type="text" class="form-control" id="brokerName" 
+            [(ngModel)]="newAsset.brokerName" name="brokerName" required
+            (input)="searchBroker($any($event.target).value)"  autocomplete="off">
+              <!-- Dropdown for search results, visible only if there are results -->
+                <div *ngIf="userBrokers.length > 0 " class="dropdown">
+                  <ul class="suggestions-list">
+                    <li *ngFor="let result of userBrokers" 
+                         (click)="selectBroker(result)">
+                        {{ result}}
+                     </li>
+                   </ul>
+                </div>
           </div>
-          <!-- Add more fields as needed -->
-          <!-- Submit and cancel buttons -->
+           <div class="form-group">
+            <label for="categoryName">Category:</label>
+            <input type="text" class="form-control" id="categoryName" [(ngModel)]="newAsset.brokerName" name="categoryName" required>
+          </div>
+
           <div class="form-group">
             <button type="submit" class="btn btn-primary">Submit</button>
             <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
