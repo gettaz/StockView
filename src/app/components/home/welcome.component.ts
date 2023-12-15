@@ -63,7 +63,9 @@ export class WelcomeComponent implements OnInit {
   private FetchCategoryData(): void {
     this.classificationService.getCategoryDistribution('userId').subscribe({
       next: (response: any[]) => {
-        this.chartData = response.map(item => ({
+        this.chartData = response
+        .filter(item => item.assetCount > 0)
+        .map(item => ({
           name: item.name,
           assetCount: item.assetCount
         }));
@@ -78,7 +80,9 @@ export class WelcomeComponent implements OnInit {
   private FetchBrokerData(): void {
     this.classificationService.getBrokerDistribution('userId').subscribe({
       next: (response: any[]) => {
-        this.chartData = response.map(item => ({
+        this.chartData = response
+        .filter(item => item.assetCount > 0)
+        .map(item => ({
           name: item.name,
           assetCount: item.assetCount
         }));

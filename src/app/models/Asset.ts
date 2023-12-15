@@ -10,12 +10,6 @@ export class Asset {
   priceSold: number | null;
   category: string;
 
-
-  // Method to calculate the gain
-  calculateGain(): number {
-    let finalPrice = this.priceSold !== null ? this.priceSold : this.currentPrice;
-    return (finalPrice - this.priceBought) * this.amount;
-  }
   constructor(
     assetName: string,
     ticker: string,

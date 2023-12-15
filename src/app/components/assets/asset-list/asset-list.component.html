@@ -1,8 +1,8 @@
-<table>
+<table datatable [dtOptions]="dtOptions" class="table table-bordered">
   <tr>
     <th>Asset Name</th>
     <th>Ticker</th>
-    <th>Price Bought $</th>
+    <th>Average Price Bought $</th>
     <th>Amount</th>
     <th>Broker Name</th>
     <th>Date Bought</th>
@@ -15,11 +15,9 @@
   <tr *ngFor="let asset of assets">
     <td>{{ asset.assetName }}</td>
     <td>{{ asset.ticker }}</td>
-    <td>{{ asset.priceBought }}</td>
-    <td>{{ asset.amount }}</td>
+    <td>{{ asset.averagePriceBought | number:'1.2-2' }}</td>
+    <td>{{ asset.totalAmount }}</td>
     <td>{{ asset.brokerName }}</td>
-    <td>{{ asset.dateBought }}</td>
-    <td>{{ asset.dateSold }}</td>
     <td>{{ asset.currentPrice }}</td>
     <td>{{ asset.priceSold }}</td>
     <td>{{ asset.category }}</td>
@@ -31,6 +29,7 @@
 <button class="btn btn-primary" (click)="openModal()">Add Asset</button>
 
 <!-- Add Asset Modal -->
+<div (click)="onComponentClick()">
 <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': showForm}" [ngStyle]="{'display': showForm ? 'block' : 'none'}">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -41,7 +40,7 @@
         </button>
       </div>
       <div class="modal-body">
-<form (ngSubmit)="onAssetAdded()" #assetForm="ngForm" (keydown.enter)="$event.preventDefault()">
+<form (ngSubmit)="onAssetAdded()" #assetForm="ngForm" (keydown.enter)="$event.preventDefault()" >
           <!-- Input fields for asset properties -->
           <div class="form-group">
             <label for="assetName">Asset Name:</label>
@@ -50,7 +49,7 @@
             (input)="searchTicker($any($event.target).value, 'assetName')" autocomplete="off">     
      
                                 <!-- Dropdown for search results, visible only if there are results -->
-            <div *ngIf="tickerSearchResults.length > 0  && activeField === 'assetName'" class="dropdown">
+            <div *ngIf="tickerSearchResults.length > 0  && activeField === 'assetName'" class="dropdown" (click)="$event.stopPropagation()">
               <ul class="suggestions-list">
                 <li *ngFor="let result of tickerSearchResults" 
                     (click)="selectTicker(result)">
@@ -66,9 +65,8 @@
             <input type="text" class="form-control" id="ticker" 
             [(ngModel)]="newAsset.ticker" name="ticker" required 
             (input)="searchTicker($any($event.target).value, 'ticker')"  autocomplete="off">
-          
             <!-- Dropdown for search results, visible only if there are results -->
-            <div *ngIf="tickerSearchResults.length > 0  && activeField === 'ticker'" class="dropdown">
+            <div *ngIf="tickerSearchResults.length > 0  && activeField === 'ticker'" class="dropdown" (click)="$event.stopPropagation()">
               <ul class="suggestions-list">
                 <li *ngFor="let result of tickerSearchResults" 
                     (click)="selectTicker(result)">
@@ -91,9 +89,9 @@
             [(ngModel)]="newAsset.brokerName" name="brokerName" required
             (input)="searchBroker($any($event.target).value)"  autocomplete="off">
               <!-- Dropdown for search results, visible only if there are results -->
-                <div *ngIf="userBrokers.length > 0 " class="dropdown">
+                <div *ngIf="classifications.length > 0 && activeField === 'broker'" class="dropdown" (click)="$event.stopPropagation()">
                   <ul class="suggestions-list">
-                    <li *ngFor="let result of userBrokers" 
+                    <li *ngFor="let result of classifications" 
                          (click)="selectBroker(result)">
                         {{ result}}
                      </li>
@@ -102,14 +100,25 @@
           </div>
            <div class="form-group">
             <label for="categoryName">Category:</label>
-            <input type="text" class="form-control" id="categoryName" [(ngModel)]="newAsset.brokerName" name="categoryName" required>
+            <input type="text" class="form-control" id="categoryName" 
+            [(ngModel)]="newAsset.category" name="categoryName" required
+            (input)="searchCategory($any($event.target).value)"  autocomplete="off">
+                          <!-- Dropdown for search results, visible only if there are results -->
+                          <div *ngIf="classifications.length > 0 && activeField === 'category'" class="dropdown" (click)="$event.stopPropagation()">
+                            <ul class="suggestions-list">
+                              <li *ngFor="let result of classifications" 
+                                   (click)="selectCategory(result)">
+                                  {{ result}}
+                               </li>
+                             </ul>
+                          </div>
           </div>
-
           <div class="form-group">
             <button type="submit" class="btn btn-primary">Submit</button>
             <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
           </div>
         </form>
+      </div>
       </div>
     </div>
   </div>

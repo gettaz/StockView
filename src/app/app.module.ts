@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import 'chartjs-adapter-date-fns';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { DataTablesModule } from "angular-datatables";
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     BrowserModule,
     AssetsModule, 
     FormsModule,
+    DataTablesModule.forRoot(),
     MatButtonToggleModule,
     RouterModule.forRoot([
       {path: 'welcome', component: WelcomeComponent},
