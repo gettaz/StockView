@@ -113,9 +113,6 @@ export class AssetListComponent implements OnInit {
           this.priceService.subscribeToTicker(asset.ticker);
           this.priceService.getCurrentPrice(asset.ticker);
         });
-      },
-      (error) => {
-        console.error('Error fetching assets:', error);
       }
     );
 

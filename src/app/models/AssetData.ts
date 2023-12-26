@@ -7,6 +7,5 @@ interface AssetData {
     category: string;
     currentPrice?: number;
     priceSold?: number;
-    // ... other properties as needed ...
   }
   
