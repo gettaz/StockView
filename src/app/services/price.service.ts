@@ -29,9 +29,10 @@ export class PriceService {
 
     this.webSocket.addEventListener('message', (event) => {
       const msg = JSON.parse(event.data);
+      console.log(event.data);
       if (msg.type === 'trade') {
         msg.data.forEach((trade: { s: string; p: number }) => {
-          this.priceUpdates.next({ ticker: trade.s, price: trade.p });
+          this.priceUpdates.next({ ticker: trade.s, price: trade.p }); //TODO: this should be one time nor foreach, if price ===  dont change 
         });
       }
     });
