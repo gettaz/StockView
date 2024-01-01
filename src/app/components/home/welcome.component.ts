@@ -4,6 +4,7 @@ import { PortfolioTimelineSummary } from 'src/app/models/PortfolioTimelineSummar
 import { Chart, registerables } from 'chart.js';
 import { TimelineDataItem } from 'src/app/models/TimelineDataItem';
 import { ClassificationService } from 'src/app/services/classification.service';
+import { ActivatedRoute } from '@angular/router';
 
 Chart.register(...registerables);
 
@@ -22,10 +23,12 @@ export class WelcomeComponent implements OnInit {
   public currentTimeSpan : '7days' | 'month' | 'YTD' = '7days' ;
   public chartData: ChartDataItem[] = []; // Initialize with an empty array
 
-  constructor(private classificationService: ClassificationService) {}
+  constructor(private classificationService: ClassificationService, private activatedRoute: ActivatedRoute,
+    ) {}
 
   ngOnInit(): void {
-    this.updateChartData();
+    this.chartData = (this.activatedRoute.snapshot.data as any).welcome;
+    this.updatePieChart(this.chartData);
     this.updateTimelineChart(this.currentTimeSpan);
     }
 
@@ -95,6 +98,7 @@ export class WelcomeComponent implements OnInit {
   }
 
   private updatePieChart(data: ChartDataItem[]): void {
+    console.log(data);
     const labels = data.map(item => item.name || item.name);
     const counts = data.map(item => item.assetCount);
   

@@ -13,6 +13,7 @@ import 'chartjs-adapter-date-fns';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { DataTablesModule } from "angular-datatables";
+import { welcomeResolverResolver } from './components/home/welcome-resolver.resolver';
 
 @NgModule({
   declarations: [
@@ -28,8 +29,11 @@ import { DataTablesModule } from "angular-datatables";
     DataTablesModule.forRoot(),
     MatButtonToggleModule,
     RouterModule.forRoot([
-      {path: 'welcome', component: WelcomeComponent},
-      {path: 'assets', loadChildren: () => import('./components/assets/assets.module').then(m => m.AssetsModule)}, // Lazy loading AssetsModule
+      {path: 'welcome',      
+      component: WelcomeComponent,
+      resolve: {welcome: welcomeResolverResolver}},
+      {path: 'assets',
+       loadChildren: () => import('./components/assets/assets.module').then(m => m.AssetsModule)}, // Lazy loading AssetsModule
       {path: '', redirectTo: 'welcome', pathMatch: 'full'},
       {path: '**', component: PagenotfoundComponent}
     ]),

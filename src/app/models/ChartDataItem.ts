@@ -1,4 +1,7 @@
-export interface ChartDataItem {
-  name: string;
-  assetCount: number;
+export class ChartDataItem {
+
+  constructor(
+    public name: string,
+    public assetCount: number
+  ) {}
 }

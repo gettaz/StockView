@@ -78,7 +78,6 @@ export class AssetListComponent implements OnInit {
   showForm = false;
 
   ngOnInit() {
-    this.dtOptions = { pagingType: 'full_numbers' };
     // Debounce search term input before making the API call
     this.searchTerms
       .pipe(
@@ -119,13 +118,6 @@ export class AssetListComponent implements OnInit {
         error: (err) => console.error('Subscription error:', err),
       });
     this.assets = (this.activatedRoute.snapshot.data as any).assets;
-
-     this.assets.forEach((asset) => {
-      this.priceService.subscribeToTicker(asset.ticker);
-      //this.priceService.getCurrentPrice(asset.ticker).subscribe(price => {
-      //  asset.currentPrice = price;
-     // });
-    });
 
     this.priceService.priceUpdates.subscribe(update => {
       this.assets.forEach(asset => {
