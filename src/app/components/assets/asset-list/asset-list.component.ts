@@ -78,6 +78,7 @@ export class AssetListComponent implements OnInit {
   showForm = false;
 
   ngOnInit() {
+    this.priceService.initializeWebSocket();
     // Debounce search term input before making the API call
     this.searchTerms
       .pipe(
@@ -118,6 +119,8 @@ export class AssetListComponent implements OnInit {
         error: (err) => console.error('Subscription error:', err),
       });
     this.assets = (this.activatedRoute.snapshot.data as any).assets;
+
+    this.assets.forEach(asset => this.priceService.subscribeToTicker(asset.ticker));
 
     this.priceService.priceUpdates.subscribe(update => {
       this.assets.forEach(asset => {
@@ -230,6 +233,15 @@ export class AssetListComponent implements OnInit {
     this.classifications = [];
     this.tickerSearchResults = [];
   }
+
+  //TODO: on destroy should unsubscribe - take untill
+  ngOnDestroy() {
+    this.priceService.priceUpdates.complete();
+    this.userSearchBrokers.complete();
+    this.userSearchCategory.complete();
+    this.searchTerms.complete();
+    this.priceService.closeWebSocket();
+
+}
 }
 
-//TODO: on destroy should unsubscribe - take untill

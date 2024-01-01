@@ -12,46 +12,49 @@ import { SearchResult } from '../models/SearchResult'; // Adjust the import path
 })
 export class PriceService {
 
-  private webSocket: WebSocket;
+  private webSocket: WebSocket | null | undefined;
   private isConnectionOpen = false;
   private messageQueue: string[] = [];
   public priceUpdates = new Subject<{ ticker: string, price: number }>();
   public usTickers: string[] = [];
 
   constructor(private http: HttpClient) {
-    this.webSocket = new WebSocket('wss://ws.finnhub.io?token=ch1hvi9r01qn6tg76npgch1hvi9r01qn6tg76nq0');
-
-    this.webSocket.addEventListener('open', () => {
-      console.log('WebSocket connection opened');
-      this.isConnectionOpen = true;
-      this.processMessageQueue();
-    });
-
-    this.webSocket.addEventListener('message', (event) => {
-      const msg = JSON.parse(event.data);
-      console.log(event.data);
-      if (msg.type === 'trade') {
-        msg.data.forEach((trade: { s: string; p: number }) => {
-          this.priceUpdates.next({ ticker: trade.s, price: trade.p }); //TODO: this should be one time nor foreach, if price ===  dont change 
-        });
-      }
-    });
-
-    this.webSocket.addEventListener('error', (error) => {
-      console.error('WebSocket Error:', error);
-    });
-
-    this.webSocket.addEventListener('close', () => {
-      console.log('WebSocket connection closed');
-      this.isConnectionOpen = false;
-    });
-
-    this.fetchUsTickers().subscribe({
-      next: tickers => console.log('US tickers fetched', tickers),
-      error: error => console.error('Error fetching US tickers', error)
-    });
-    
    }
+
+   public initializeWebSocket() {
+    this.priceUpdates = new Subject<{ ticker: string, price: number }>();
+    if (!this.webSocket || this.webSocket.readyState === WebSocket.CLOSED) {
+      this.webSocket = new WebSocket('wss://ws.finnhub.io?token=ch1hvi9r01qn6tg76npgch1hvi9r01qn6tg76nq0');
+      this.webSocket.addEventListener('message', (event) => {
+        const msg = JSON.parse(event.data);
+        console.log(msg);
+        if (msg.type === 'trade') {
+          msg.data.forEach((trade: { s: string; p: number }) => {
+            this.priceUpdates.next({ ticker: trade.s, price: trade.p }); //TODO: this should be one time nor foreach, if price ===  dont change 
+          });
+        }
+      });
+      this.fetchUsTickers().subscribe({
+        next: tickers => console.log('US tickers fetched', tickers),
+        error: error => console.error('Error fetching US tickers', error)
+      });
+      this.webSocket.addEventListener('open', () => {
+        console.log('WebSocket connection opened');
+        this.isConnectionOpen = true;
+        this.processMessageQueue();
+      });
+
+      this.webSocket.addEventListener('error', (error) => {
+        console.error('WebSocket Error:', error);
+      });
+
+      this.webSocket.addEventListener('close', () => {
+        console.log('WebSocket connection closed');
+        this.isConnectionOpen = false;
+      });
+    }
+  }
+
   fetchUsTickers(): Observable<string[]> {
     const url = `https://api.finnhub.io/api/v1/stock/symbol?exchange=US&token=ch1hvi9r01qn6tg76npgch1hvi9r01qn6tg76nq0`;
     return this.http.get<any[]>(url).pipe(
@@ -71,7 +74,7 @@ export class PriceService {
   subscribeToTicker(ticker: string) {
     const message = JSON.stringify({ 'type': 'subscribe', 'symbol': ticker });
     console.log('Preparing to send message:', message);
-    if (this.isConnectionOpen) {
+    if (this.webSocket && this.isConnectionOpen) {
       this.webSocket.send(message);
       console.log('Subscribed to ticker:', ticker);
     } else {
@@ -107,7 +110,7 @@ export class PriceService {
   private processMessageQueue() {
     while (this.messageQueue.length > 0) {
       const message = this.messageQueue.shift();
-      if (message) {
+      if (this.webSocket && message) {
         this.webSocket.send(message);
         console.log('Sending queued message:', message);
       }
@@ -132,5 +135,14 @@ export class PriceService {
         return throwError(error);
       })
     );
+  }
+
+  public closeWebSocket() {
+    if (this.webSocket && this.isConnectionOpen) {
+      console.log('Closing WebSocket connection');
+      this.webSocket.close();
+      this.isConnectionOpen = false;
+      this.webSocket = null;
+    }
   }
 }
