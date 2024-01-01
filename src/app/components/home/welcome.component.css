@@ -1,19 +1,21 @@
 /* Container for Charts and Controls */
 /* Specific Canvas Size */
 #myChart {
-  width: 60% !important; /* Full width */
-  height: auto !important;
+  width: 60% ; /* Full width */
+  height: auto ;
   margin:auto /* Auto height for responsive aspect ratio */
 }
 #timelineChart {
-  width: 100% !important; /* Full width */
-  height: auto !important; /* Auto height for responsive aspect ratio */
+  width: 100% ; /* Full width */
+  height: auto ; /* Auto height for responsive aspect ratio */
 }
 .charts-flex-container {
   display: flex;
   flex-wrap: wrap; /* Allow items to wrap */
   gap: 10px; /* Space between items */
   justify-content: center; /* Center items */
+  box-sizing: content-box;
+
 }
 
 .chart-with-button {
