@@ -3,6 +3,7 @@ import { Asset } from '../../../models/Asset';
 import { Subject } from 'rxjs';
 import { AssetService } from '../../../services/asset.service';
 import { PriceService } from '../../../services/price.service';
+
 import {
   debounceTime,
   distinctUntilChanged,
@@ -16,6 +17,7 @@ import { SearchResult } from 'src/app/models/SearchResult';
 import { AssetSummary } from '../../../models/AssetSummary';
 import { DataTablesModule } from 'angular-datatables';
 import { ActivatedRoute } from '@angular/router';
+import { AbstractControl, FormBuilder, FormGroup, NgForm, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 Chart.register(...registerables);
 
@@ -25,6 +27,7 @@ Chart.register(...registerables);
   styleUrls: ['./asset-list.component.css'],
 })
 export class AssetListComponent implements OnInit {
+[x: string]: any;
   private searchTerms = new Subject<{ term: string }>();
   private userSearchBrokers = new Subject<string>();
   private userSearchCategory = new Subject<string>();
@@ -34,8 +37,9 @@ export class AssetListComponent implements OnInit {
   tickerSearchResults: SearchResult[] = []; // Array to store search results
   dtOptions: DataTables.Settings = {};
   public activeField: string | null = null;
-  private selectionMade = false;
-  private _newAsset: Asset = new Asset(
+  public assetNameSelected = false;
+  public tickerSelected = false;
+    private _newAsset: Asset = new Asset(
     '', // assetName
     '', // ticker
     0, // priceBought
@@ -50,11 +54,13 @@ export class AssetListComponent implements OnInit {
 
   assets: AssetSummary[] = [];
   private assetService = inject(AssetService);
+  public assetForm!: FormGroup; // Declare the form group
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private priceService: PriceService,
-    private classificationService: ClassificationService
+    private classificationService: ClassificationService,
+    private formBuilder: FormBuilder
   ) {}
 
   get newAsset(): Asset {
@@ -78,6 +84,8 @@ export class AssetListComponent implements OnInit {
   showForm = false;
 
   ngOnInit() {
+    this.initializeForm();
+
     this.priceService.initializeWebSocket();
     // Debounce search term input before making the API call
     this.searchTerms
@@ -133,14 +141,11 @@ export class AssetListComponent implements OnInit {
   }
 
   onAssetAdded(): void {
-    if (!this.selectionMade) {
-      console.error(
-        'Please select an asset name and ticker from the dropdown.'
-      );
-      return; // Prevent form submission if no valid selection has been made
-    }
-    console.log('onAssetAdded');
 
+    if (!this.assetForm.valid) {
+      console.error('Form is invalid');
+      return;
+    }
     this.priceService.getCurrentPrice(this.newAsset.ticker).subscribe(
       (currentPrice: number) => {
         console.log('Current price for:', this.newAsset.ticker, currentPrice);
@@ -182,7 +187,14 @@ export class AssetListComponent implements OnInit {
   }
 
   searchTicker(value: string, field: string): void {
-    this.selectionMade = false;
+    
+    if(field =='ticker')
+    {
+        this.tickerSelected = false;
+    }
+    else{
+      this.assetNameSelected = false;
+    }
     this.activeField = field;
     this.searchTerms.next({ term: value });
   }
@@ -210,10 +222,11 @@ export class AssetListComponent implements OnInit {
     this.showForm = true;
   }
   selectTicker(result: any): void {
-    this.newAsset.ticker = result.displaySymbol;
-    this.newAsset.assetName = result.description;
+    this.assetForm.get('ticker')!.setValue(result.displaySymbol);
+    this.assetForm.get('assetName')!.setValue(result.description);
     this.tickerSearchResults = []; // Clear the results after selection
-    this.selectionMade = true;
+    this.tickerSelected = true;
+    this.assetNameSelected = true;
     setTimeout(() => document.getElementById('priceBought')?.focus(), 0);
   }
   closeModal(): void {
@@ -242,6 +255,29 @@ export class AssetListComponent implements OnInit {
     this.searchTerms.complete();
     this.priceService.closeWebSocket();
 
+}
+private initializeForm(): void {
+  this.assetForm = this.formBuilder.group({
+    assetName: ['', Validators.required],
+    ticker: ['', Validators.required],
+    priceBought: [0, [Validators.required, Validators.min(0.01)]],
+    amount: [0, [Validators.required, Validators.min(1)]],
+    brokerName: ['', Validators.required],
+    categoryName: ['', Validators.required],
+    selectionCheck: [null, this.selectionValidator()]
+  })
+}
+
+public selectionValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!this.assetNameSelected || !this.tickerSelected ) {
+      return { 'selectionNotMade': true };
+    }
+    return null;
+  };
+}
+isNameNotEmpty(nametype: string): boolean {
+  return this.assetForm.get(nametype)?.value.trim() !== '';
 }
 }
 

@@ -8,7 +8,7 @@ import { AssetsModule } from './components/assets/assets.module';
 import { AssetService } from './services/asset.service';
 import { HttpClientModule } from '@angular/common/http'; 
 import { PriceService } from './services/price.service';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule  } from '@angular/forms';
 import 'chartjs-adapter-date-fns';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -24,8 +24,7 @@ import { welcomeResolverResolver } from './components/home/welcome-resolver.reso
   imports: [
     HttpClientModule,
     BrowserModule,
-    AssetsModule, 
-    FormsModule,
+    ReactiveFormsModule ,
     DataTablesModule.forRoot(),
     MatButtonToggleModule,
     RouterModule.forRoot([

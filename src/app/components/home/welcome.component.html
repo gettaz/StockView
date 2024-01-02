@@ -24,12 +24,14 @@
         <!-- Container for Timeline Chart and its Toggles -->
         <div class="chart-with-toggles">
           <!-- Dropdown for Time Span -->
-          <select [(ngModel)]="currentTimeSpan" (change)="onTimeSpanChange()">
-            <option value="7days">Last 7 Days</option>
+          <form [formGroup]="timeform">
+            <select formControlName="timeSelector" (change)="onTimeSpanChange()">
+              <option value="7days">Last 7 Days</option>
             <option value="month">Last Month</option>
             <option value="YTD">Year To Date</option>
             <option value="all">All Time</option>
           </select>
+        </form>
           <!-- Timeline Chart Canvas -->
           <div class="chart-container">
             <canvas id="timelineChart"></canvas>

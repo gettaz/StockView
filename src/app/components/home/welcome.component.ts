@@ -5,6 +5,7 @@ import { Chart, registerables } from 'chart.js';
 import { TimelineDataItem } from 'src/app/models/TimelineDataItem';
 import { ClassificationService } from 'src/app/services/classification.service';
 import { ActivatedRoute } from '@angular/router';
+import { FormControl, FormGroup } from '@angular/forms';
 
 Chart.register(...registerables);
 
@@ -15,7 +16,10 @@ Chart.register(...registerables);
 })
 
 export class WelcomeComponent implements OnInit {
-  public pageTitle = 'Asset Overview';
+  public timeform = new FormGroup({
+    timeSelector: new FormControl('7days')
+  });
+  public pageTitle = 'Asset Overview'
   private pieChart: any; // Instance for the pie chart
   private timelineChart: any; // Instance for the timeline chart
   public  showCategoryData = true; // Toggle between category and broker data
@@ -32,7 +36,7 @@ export class WelcomeComponent implements OnInit {
     this.updateTimelineChart(this.currentTimeSpan);
     }
 
-    private updateTimelineChart(timeRange: '7days' | 'month' | 'YTD' | 'all' = this.currentTimeSpan): void {
+    private updateTimelineChart(timeRange: string): void {
       let data;
     switch (this.currentView) {
       case 'all':
@@ -50,7 +54,8 @@ export class WelcomeComponent implements OnInit {
 
   public toggleView(view: 'all' | 'category' | 'broker'): void {
     this.currentView = view;
-    this.updateTimelineChart();
+    const selectedValue = this.timeform.get('timeSelector')?.value ?? '7days';
+    this.updateTimelineChart(selectedValue);
   }
 
   private updateChartData(): void {
@@ -193,10 +198,11 @@ export class WelcomeComponent implements OnInit {
     }
   }
   public onTimeSpanChange(): void {
-    this.updateTimelineChart(this.currentTimeSpan);
+    const selectedValue = this.timeform.get('timeSelector')?.value ?? '7days';
+    this.updateTimelineChart(selectedValue);
   }
 
-  private mockFetchCategoryTimelineData(timeRange: '7days' | 'month' | 'YTD' | 'all'): PortfolioTimelineSummary {
+  private mockFetchCategoryTimelineData(timeRange: string): PortfolioTimelineSummary {
     let techData: TimelineDataItem[] = [];
     let cryptoData: TimelineDataItem[] = [];
 
@@ -309,7 +315,7 @@ export class WelcomeComponent implements OnInit {
 }
 
 
-private mockFetchBrokerTimelineData(timeRange: '7days' | 'month' | 'YTD' | 'all'): PortfolioTimelineSummary {
+private mockFetchBrokerTimelineData(timeRange: string): PortfolioTimelineSummary {
   let broker1Data: TimelineDataItem[] = [];
   let broker2Data: TimelineDataItem[] = [];
 
@@ -402,7 +408,7 @@ private mockFetchBrokerTimelineData(timeRange: '7days' | 'month' | 'YTD' | 'all'
 }
 
   
-  private mockFetchAllTimelineData(timeRange: '7days' | 'month' | 'YTD' | 'all'): PortfolioTimelineSummary {
+  private mockFetchAllTimelineData(timeRange: string): PortfolioTimelineSummary {
     let allData: TimelineDataItem[] = [];
 
     switch (timeRange) {

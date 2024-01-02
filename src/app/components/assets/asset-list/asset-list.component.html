@@ -28,95 +28,96 @@
 
 <!-- Add Asset Modal -->
 <div (click)="onComponentClick()">
-<div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': showForm}" [ngStyle]="{'display': showForm ? 'block' : 'none'}">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Add Asset</h5>
-        <button type="button" class="close" aria-label="Close" (click)="closeModal()">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-<form (ngSubmit)="onAssetAdded()" #assetForm="ngForm" (keydown.enter)="$event.preventDefault()" >
-          <!-- Input fields for asset properties -->
-          <div class="form-group">
-            <label for="assetName">Asset Name:</label>
-            <input type="text" class="form-control" id="assetName" 
-            [(ngModel)]="newAsset.assetName" name="assetName" required
-            (input)="searchTicker($any($event.target).value, 'assetName')" autocomplete="off">     
-     
-                                <!-- Dropdown for search results, visible only if there are results -->
-            <div *ngIf="tickerSearchResults.length > 0  && activeField === 'assetName'" class="dropdown" (click)="$event.stopPropagation()">
-              <ul class="suggestions-list">
-                <li *ngFor="let result of tickerSearchResults" 
-                    (click)="selectTicker(result)">
-                  {{ result.displaySymbol }} - {{ result.description }}
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="form-group">
-            <!-- Label for the Ticker input -->
-            <label for="ticker">Ticker:</label>
-            <!-- Ticker input field with two-way data binding and input event handling -->
-            <input type="text" class="form-control" id="ticker" 
-            [(ngModel)]="newAsset.ticker" name="ticker" required 
-            (input)="searchTicker($any($event.target).value, 'ticker')"  autocomplete="off">
-            <!-- Dropdown for search results, visible only if there are results -->
-            <div *ngIf="tickerSearchResults.length > 0  && activeField === 'ticker'" class="dropdown" (click)="$event.stopPropagation()">
-              <ul class="suggestions-list">
-                <li *ngFor="let result of tickerSearchResults" 
-                    (click)="selectTicker(result)">
-                  {{ result.displaySymbol }} - {{ result.description }}
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="priceBought">Price Bought:</label>
-            <input type="number" class="form-control" id="priceBought" [(ngModel)]="newAsset.priceBought" name="priceBought" required>
-          </div>
-          <div class="form-group">
-            <label for="amount">Amount:</label>
-            <input type="number" class="form-control" id="amount" [(ngModel)]="newAsset.amount" name="amount" required>
-          </div>
-          <div class="form-group">
-            <label for="brokerName">Broker:</label>
-            <input type="text" class="form-control" id="brokerName" 
-            [(ngModel)]="newAsset.brokerName" name="brokerName" required
-            (input)="searchBroker($any($event.target).value)"  autocomplete="off">
-              <!-- Dropdown for search results, visible only if there are results -->
-                <div *ngIf="classifications.length > 0 && activeField === 'broker'" class="dropdown" (click)="$event.stopPropagation()">
-                  <ul class="suggestions-list">
-                    <li *ngFor="let result of classifications" 
-                         (click)="selectBroker(result)">
-                        {{ result}}
-                     </li>
-                   </ul>
+  <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': showForm}"
+    [ngStyle]="{'display': showForm ? 'block' : 'none'}">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Asset</h5>
+          <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="assetForm" (ngSubmit)="onAssetAdded()">
+            <!-- Input fields for asset properties -->
+            <div class="form-group">
+              <label for="assetName">Asset Name:</label>
+              <input type="text" class="form-control" id="assetName" formControlName="assetName"
+                 (input)="searchTicker(assetForm.get('assetName')!.value, 'assetName')" autocomplete="off">
+                 <div *ngIf="assetForm.get('assetName')!.touched && isNameNotEmpty('assetName') &&assetForm.get('assetName')!.touched && !assetNameSelected " class="text-danger">
+                  Please choose an asset name from the dropdown.
                 </div>
-          </div>
-           <div class="form-group">
-            <label for="categoryName">Category:</label>
-            <input type="text" class="form-control" id="categoryName" 
-            [(ngModel)]="newAsset.category" name="categoryName" required
-            (input)="searchCategory($any($event.target).value)"  autocomplete="off">
-                          <!-- Dropdown for search results, visible only if there are results -->
-                          <div *ngIf="classifications.length > 0 && activeField === 'category'" class="dropdown" (click)="$event.stopPropagation()">
-                            <ul class="suggestions-list">
-                              <li *ngFor="let result of classifications" 
-                                   (click)="selectCategory(result)">
-                                  {{ result}}
-                               </li>
-                             </ul>
-                          </div>
-          </div>
-          <div class="form-group">
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
-          </div>
-        </form>
-      </div>
+                </div>
+              <!-- Dropdown for search results, visible only if there are results -->
+              <div *ngIf="tickerSearchResults.length > 0  && activeField === 'assetName'" class="dropdown"
+                (click)="$event.stopPropagation()">
+                <ul class="suggestions-list">
+                  <li *ngFor="let result of tickerSearchResults" (click)="selectTicker(result)">
+                    {{ result.displaySymbol }} - {{ result.description }}
+                  </li>
+                </ul>
+              </div>
+            <div class="form-group">
+              <!-- Label for the Ticker input -->
+              <label for="ticker">Ticker:</label>
+              <!-- Ticker input field with two-way data binding and input event handling -->
+              <input type="text" class="form-control" id="ticker" formControlName="ticker" 
+                (input)="searchTicker($any($event.target).value, 'ticker')" autocomplete="off">
+                <div *ngIf="assetForm.get('assetName')!.touched && isNameNotEmpty('ticker') && !tickerSelected " class="text-danger">
+                  Please choose an asset ticker from the dropdown.
+                </div>
+              <!-- Dropdown for search results, visible only if there are results -->
+              <div *ngIf="tickerSearchResults.length > 0  && activeField === 'ticker'" class="dropdown"
+                (click)="$event.stopPropagation()">
+                <ul class="suggestions-list">
+                  <li *ngFor="let result of tickerSearchResults" (click)="selectTicker(result)">
+                    {{ result.displaySymbol }} - {{ result.description }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="priceBought">Price Bought:</label>
+              <input type="number" class="form-control" id="priceBought" formControlName="priceBought" required>
+            </div>
+            <div class="form-group">
+              <label for="amount">Amount:</label>
+              <input type="number" class="form-control" id="amount" formControlName="amount"
+                required>
+            </div>
+            <div class="form-group">
+              <label for="brokerName">Broker:</label>
+              <input type="text" class="form-control" id="brokerName" formControlName="brokerName" required (input)="searchBroker($any($event.target).value)" autocomplete="off">
+              <!-- Dropdown for search results, visible only if there are results -->
+              <div *ngIf="classifications.length > 0 && activeField === 'broker'" class="dropdown"
+                (click)="$event.stopPropagation()">
+                <ul class="suggestions-list">
+                  <li *ngFor="let result of classifications" (click)="selectBroker(result)">
+                    {{ result}}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="categoryName">Category:</label>
+              <input type="text" class="form-control" id="categoryName" formControlName="categoryName" required (input)="searchCategory($any($event.target).value)" autocomplete="off">
+              <!-- Dropdown for search results, visible only if there are results -->
+              <div *ngIf="classifications.length > 0 && activeField === 'category'" class="dropdown"
+                (click)="$event.stopPropagation()">
+                <ul class="suggestions-list">
+                  <li *ngFor="let result of classifications" (click)="selectCategory(result)">
+                    {{ result}}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary" [disabled]="!assetForm.valid">Submit</button>
+              <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
