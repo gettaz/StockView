@@ -14,6 +14,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { DataTablesModule } from "angular-datatables";
 import { welcomeResolverResolver } from './components/home/welcome-resolver.resolver';
+import { ClassificationService } from './services/classification.service';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,7 @@ import { welcomeResolverResolver } from './components/home/welcome-resolver.reso
     ]),
     BrowserAnimationsModule
   ],
-  providers: [AssetService, PriceService],
+  providers: [AssetService, PriceService, ClassificationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

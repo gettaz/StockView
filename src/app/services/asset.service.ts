@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders  } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AssetSummary } from '../models/AssetSummary'; // Adjust the path as necessary
@@ -10,12 +10,19 @@ import { map } from 'rxjs/operators';
 export class AssetService {
   constructor(private http: HttpClient) {}
 
-  addAsset(userId: string, asset: any): Observable<any> {
-    return this.http.post(`http://your-backend-server.com/api/users/${userId}/assets`, asset);
+  addAsset(asset: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3Mzc4YWY3ZC0xM2Y5LTRkM2EtOTIxMi05YjQ5ODg1MGUzOWYiLCJuYmYiOjE3MDY5MDY3MjUsImV4cCI6MTcwNzA3OTUyNSwiaWF0IjoxNzA2OTA2NzI1LCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.BJPYL_Nxs9R1vMsVL9iexIimz6FBKI6VJ93J6v-2jVk'
+    });
+    return this.http.post(`http://localhost:5130/api/users/assets`, asset ,{ headers: headers });
   }
 
   getAssets(userId: string): Observable<AssetSummary[]> {
-    return this.http.get<any[]>(`http://localhost:5130/api/Assets/8c656bc8-c03c-4909-bb0c-a2c4669316b5/assets`)
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3Mzc4YWY3ZC0xM2Y5LTRkM2EtOTIxMi05YjQ5ODg1MGUzOWYiLCJuYmYiOjE3MDY5MDY3MjUsImV4cCI6MTcwNzA3OTUyNSwiaWF0IjoxNzA2OTA2NzI1LCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.BJPYL_Nxs9R1vMsVL9iexIimz6FBKI6VJ93J6v-2jVk'
+    });
+
+    return this.http.get<any[]>(`http://localhost:5130/api/Assets/assets`,{ headers: headers })
       .pipe(
         map((data: any[]) => data.map(item => new AssetSummary(
           item.assetName,
