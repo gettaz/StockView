@@ -1,8 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { OnInit, Component, ViewChild, TemplateRef, ViewContainerRef, inject } from '@angular/core';
 import { Asset } from '../../../models/Asset';
 import { Subject } from 'rxjs';
 import { AssetService } from '../../../services/asset.service';
 import { PriceService } from '../../../services/price.service';
+import {MatIconModule} from '@angular/material/icon';
 
 import {
   debounceTime,
@@ -31,6 +32,9 @@ export class AssetListComponent implements OnInit {
   private searchTerms = new Subject<{ term: string }>();
   private userSearchBrokers = new Subject<string>();
   private userSearchCategory = new Subject<string>();
+  displayedColumns: string[] = ['assetName', 'ticker', 'averagePriceBought', 'amount', 'brokerName', 'currentPrice', 'priceSold', 'category', 'gain'];
+  expandedAsset: Asset | null = null;
+  expandedAssetDetails: Asset[] = [];
 
   classifications: string[] = []; // This will store the classifications names
   private userCategories = new Subject<{ term: string }>();
@@ -55,6 +59,8 @@ export class AssetListComponent implements OnInit {
   assets: AssetSummary[] = [];
   private assetService = inject(AssetService);
   public assetForm!: FormGroup; // Declare the form group
+  @ViewChild('expandedDetail', { read: ViewContainerRef }) expansionDetailContainer!: ViewContainerRef;
+  @ViewChild('expansionDetailTemplate', { read: TemplateRef }) private expansionDetailTemplate!: TemplateRef<any>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -67,11 +73,36 @@ export class AssetListComponent implements OnInit {
     return this._newAsset;
   }
 
+  isRowExpanded(element: any): boolean {
+    return this.expandedAsset === element;
+  }
+toggleRow(asset: Asset) {
+  if (this.expandedAsset === asset) {
+    // If the same row is clicked again, collapse it
+    this.expandedAsset = null;
+    this.expandedAssetDetails = [];
+  } else {
+    this.expandedAsset = asset;
+    console.log("toggleRow");
+    // Make an API call to fetch details
+    //this.assetService.getAssetDetails(asset.id).subscribe(details => {
+     this.expandedAssetDetails = [
+      {  assetName: 'Asset 1', ticker: 'A1', purchasePrice: 100, amount: 10, brokerName: 'Broker 1', currentPrice: 150, priceSold: 0, category: 'Category 1',  dateBought: new Date(2021, 0, 1) ,  dateSold: new Date(2021, 0, 1)   },
+      {  assetName: 'Asset 2', ticker: 'A2', purchasePrice: 200, amount: 20, brokerName: 'Broker 2', currentPrice: 250, priceSold: 0, category: 'Category 2',  dateBought: new Date(2021, 0, 1) ,  dateSold: new Date(2021, 0, 1)   },
+      // Add more assets as needed
+    ];
+    };
+
+  }
+
+
+  
+
   set newAsset(value: Asset) {
     this._newAsset = new Asset(
       value.assetName,
       value.ticker,
-      value.priceBought,
+      value.purchasePrice,
       value.amount,
       value.brokerName,
       value.dateBought,
@@ -146,27 +177,28 @@ export class AssetListComponent implements OnInit {
       console.error('Form is invalid');
       return;
     }
-    this.priceService.getCurrentPrice(this.newAsset.ticker).subscribe(
+
+    this.priceService.getCurrentPrice(this.assetForm.value.ticker).subscribe(
       (currentPrice: number) => {
         console.log('Current price for:', this.newAsset.ticker, currentPrice);
 
         // Create a new instance of Asset using the properties of newAsset
         const assetToAdd = new Asset(
-          this.newAsset.assetName,
-          this.newAsset.ticker,
-          this.newAsset.priceBought,
-          this.newAsset.amount,
-          this.newAsset.brokerName,
+          this.assetForm.value.assetName,
+          this.assetForm.value.ticker,
+          this.assetForm.value.priceBought,
+          this.assetForm.value.amount,
+          this.assetForm.value.brokerName,
           new Date(this.newAsset.dateBought),
           this.newAsset.dateSold ? new Date(this.newAsset.dateSold) : null,
           currentPrice, // updated current price
           this.newAsset.priceSold,
-          this.newAsset.category
+          this.assetForm.value.category
         );
         this.priceService.subscribeToTicker(assetToAdd.ticker);
 
         // Add the newly created Asset instance to the assets array
-        // this.assets.push(assetToAdd);
+        this.assetService.addAsset(assetToAdd).subscribe();
 
         // Reset newAsset after adding the asset
         this.resetNewAssetForm();
@@ -211,12 +243,17 @@ export class AssetListComponent implements OnInit {
     console.info('searchCategory', this.classifications);
   }
   selectCategory(value: string): void {
-    this.newAsset.category = value;
+    this.assetForm.get('categoryName')!.setValue(value);
+
     this.classifications = []; // Clear the results after selection
+    this.assetForm.updateValueAndValidity();
   }
   selectBroker(value: string): void {
+    this.assetForm.get('brokerName')!.setValue(value);
+
     this.newAsset.brokerName = value;
     this.classifications = []; // Clear the results after selection
+    this.assetForm.updateValueAndValidity();
   }
   openModal(): void {
     this.showForm = true;
@@ -227,6 +264,8 @@ export class AssetListComponent implements OnInit {
     this.tickerSearchResults = []; // Clear the results after selection
     this.tickerSelected = true;
     this.assetNameSelected = true;
+    this.assetForm.updateValueAndValidity();
+
     setTimeout(() => document.getElementById('priceBought')?.focus(), 0);
   }
   closeModal(): void {
@@ -264,7 +303,6 @@ private initializeForm(): void {
     amount: [0, [Validators.required, Validators.min(1)]],
     brokerName: ['', Validators.required],
     categoryName: ['', Validators.required],
-    selectionCheck: [null, this.selectionValidator()]
   })
 }
 

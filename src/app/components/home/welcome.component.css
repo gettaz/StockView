@@ -1,140 +1,93 @@
-/* Container for Charts and Controls */
-/* Specific Canvas Size */
-#myChart {
-  width: 60% ; /* Full width */
-  height: auto ;
-  margin:auto /* Auto height for responsive aspect ratio */
-}
-#timelineChart {
-  width: 100% ; /* Full width */
-  height: auto ; /* Auto height for responsive aspect ratio */
-}
+@import 'normalize.css';
+
 .charts-flex-container {
   display: flex;
-  flex-wrap: wrap; /* Allow items to wrap */
-  gap: 10px; /* Space between items */
-  justify-content: center; /* Center items */
-  box-sizing: content-box;
-
+  gap: 10px;
+  justify-content: space-between;
+  align-items: stretch;
+  align-content: stretch;
+  box-sizing: border-box;
+  width: 100%;
+  flex-direction: row;
 }
 
-.chart-with-button {
-  display: flex; /* Use flexbox */
-  align-items: center; /* Align items vertically in the center */
-  justify-content: start; /* Align items to the start (left) */
-  flex-wrap: wrap; /* Allow items to wrap */
-  gap: 10px; /* Space between items */
-  flex: 1; /* Flex grow */
-  min-width: 300px; /* Minimum width */
-  max-width: 100%; /* Maximum width on narrow screens */
-  margin: auto; /* Centering */
-  transition: width 0.5s ease, height 0.5s ease; /* Smooth transition for width and height */
+#timelineChart {
+  height: auto;
+  margin-bottom: 10px;
+  flex-grow: 1;
+  width: 100%; /* Take full width */
 }
+
+
+#myChart {
+  height: auto;
+  max-width: 300px; /* Set maximum width for larger screens */
+}
+
 .chart-with-toggles {
-  flex: 1; /* Flex grow */
-  min-width: 300px; /* Minimum width before wrapping */
-  max-width: 750px; /* Maximum width */
-  margin: 0 auto; /* Centering */
-  transition: width 0.5s ease; /* Smooth transition for width */
+  flex: 1; /* Take full width initially */ 
+  gap: 10px;
+  align-items: stretch;
 }
 
-/* Chart Canvas Container */
-.chart-container {
-  width: 100%; /* Full width of its container */
-  height: auto; /* Auto height for responsive aspect ratio */
-  margin-bottom: 10px; /* Space below the chart */
+.toggle-container {
+  justify-content: center;
+  gap: 10px;
+  flex: 0;
 }
 
-/* Button Container - Centering Buttons */
-.button-container {
-  display: flex;
-  justify-content: center; /* Horizontally center buttons */
+.switch-container {
+  width: 30px;
 }
 
-/* Responsive Design for Larger Screens */
-@media (min-width: 768px) {
+.broker,
+.categories {
+  flex: 1; /* Take equal width */
+  text-align: center;
+}
+
+@media (max-width: 767px) {
   .charts-flex-container {
-    flex-direction: row; /* Side-by-side layout */
-    justify-content: space-around; /* Space out items */
+    flex-direction: column;
+   /* align-items: stretch; /* Optional: Ensures items stretch to full width */
   }
 
-  .chart-with-button {
-    max-width: none; /* Remove max-width restriction */
-    width: 45%; /* Adjust width for charts */
-    height: auto; /* Allow height to adjust proportionally */
-  }
-
-  .chart-with-toggles {
-    width: 45%; /* Adjust width for charts */
-    padding-top: 40px; /* Add padding to the top */
-  }
-
-  .switch-container {
-    width: 25%; /* Adjust width for charts */
-    padding-top: 40px; /* Add padding to the top */
+  #timelineChart, #myChart {
+    flex: 1; /* Each chart takes equal width */
+    max-width: none; /* Remove max-width for larger screens */
+    max-height: 250px;
   }
 }
+
+
 
 /* Toggle Switch Styling */
-.switch-container {
-  text-align: center;
-  width: 30px; /* Reduced width of the switch container */
-  margin-left: 90px; /* Added margin for spacing to the left */
-  margin-top: 60px; /* Added margin for spacing to the left */
-
-  flex: 0 0 auto; /* Do not grow or shrink, maintain actual size */
-}
-
-.chart-toggle {
-  display: none; /* Hide the default checkbox input */
-}
-
 .chart-label {
   cursor: pointer;
-  width: 40px; /* Reduced width of the switch */
-  height: 80px; /* Reduced height of the switch */
+  width: 40px;
+  height: 80px;
   background: grey;
-  display: block;
-  border-radius: 50px; /* Adjust for rounded corners */
+  border-radius: 50px;
   position: relative;
-  text-indent: 0; /* Reset text indentation */
-  line-height: 50px; /* Line height for vertical centering of text */
-  color: black; /* Text color changed to black */
+  text-indent: 0;
+  line-height: 50px;
+  color: black;
 }
 
 .chart-label:after {
   content: '';
   position: absolute;
-  top: 90%; /* Adjust the top value to fine-tune vertical centering */
-  left: 5px; /* Adjusted left position for the toggle circle */
-  transform: translateY(-50%); /* Center vertically using transform */
-  width: 20px; /* Reduced width of the toggle circle */
-  height: 20px; /* Reduced height of the toggle circle */
+  top: 10px;
+  left: 5px;
+  width: 20px;
+  height: 20px;
   background: #fff;
   border-radius: 50%;
-  margin-top: -20px; /* Add negative margin to the top for better alignment */
   transition: 0.3s;
 }
 
-
 .chart-toggle:checked + .chart-label:after {
-  top: calc(100% - 25px); /* Move to the bottom */
-  transform: translateY(-100%);
+  top: calc(100% - 30px); /* Adjusted for alignment */
 }
 
-.chart-label .broker, .chart-label .categories {
-  position: absolute;
-  width: 100%;
-  text-align: right;
-  color: black; /* Text color changed to black */
-}
 
-.chart-label .broker {
-  top: 0;
-  left: 35px; /* Adjust the left position to move it to the right */
-}
-
-.chart-label .categories {
-  bottom: 0;
-  left: 35px; /* Adjust the left position to move it to the right */
-}

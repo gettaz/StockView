@@ -12,14 +12,14 @@ export class AssetService {
 
   addAsset(asset: any): Observable<any> {
     const headers = new HttpHeaders({
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3Mzc4YWY3ZC0xM2Y5LTRkM2EtOTIxMi05YjQ5ODg1MGUzOWYiLCJuYmYiOjE3MDY5MDY3MjUsImV4cCI6MTcwNzA3OTUyNSwiaWF0IjoxNzA2OTA2NzI1LCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.BJPYL_Nxs9R1vMsVL9iexIimz6FBKI6VJ93J6v-2jVk'
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3Mzc4YWY3ZC0xM2Y5LTRkM2EtOTIxMi05YjQ5ODg1MGUzOWYiLCJuYmYiOjE3MDc1NjIyNzUsImV4cCI6MTcwNzczNTA3NSwiaWF0IjoxNzA3NTYyMjc1LCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.vHkWcNBvyPVQ_3TD_pIQR1wc1cTJmglqazBtyjS6U0w'
     });
-    return this.http.post(`http://localhost:5130/api/users/assets`, asset ,{ headers: headers });
+    return this.http.post(`http://localhost:5130/api/Assets/assets`, asset ,{ headers: headers });
   }
 
   getAssets(userId: string): Observable<AssetSummary[]> {
     const headers = new HttpHeaders({
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3Mzc4YWY3ZC0xM2Y5LTRkM2EtOTIxMi05YjQ5ODg1MGUzOWYiLCJuYmYiOjE3MDY5MDY3MjUsImV4cCI6MTcwNzA3OTUyNSwiaWF0IjoxNzA2OTA2NzI1LCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.BJPYL_Nxs9R1vMsVL9iexIimz6FBKI6VJ93J6v-2jVk'
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3Mzc4YWY3ZC0xM2Y5LTRkM2EtOTIxMi05YjQ5ODg1MGUzOWYiLCJuYmYiOjE3MDc1NjIyNzUsImV4cCI6MTcwNzczNTA3NSwiaWF0IjoxNzA3NTYyMjc1LCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.vHkWcNBvyPVQ_3TD_pIQR1wc1cTJmglqazBtyjS6U0w'
     });
 
     return this.http.get<any[]>(`http://localhost:5130/api/Assets/assets`,{ headers: headers })

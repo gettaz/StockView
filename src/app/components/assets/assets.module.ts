@@ -4,6 +4,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AssetListComponent } from './asset-list/asset-list.component';
 import { savedAssetsResolver } from './asset-list/saved-assets.resolver';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+
 
 @NgModule({
   declarations: [
@@ -12,6 +15,8 @@ import { savedAssetsResolver } from './asset-list/saved-assets.resolver';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    MatTableModule,
+    MatIconModule,
     RouterModule.forChild([
       { path: '', 
       component: AssetListComponent,

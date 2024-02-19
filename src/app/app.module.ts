@@ -15,6 +15,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { DataTablesModule } from "angular-datatables";
 import { welcomeResolverResolver } from './components/home/welcome-resolver.resolver';
 import { ClassificationService } from './services/classification.service';
+import { MatTableModule } from '@angular/material/table';
+
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import { ClassificationService } from './services/classification.service';
     ReactiveFormsModule ,
     DataTablesModule.forRoot(),
     MatButtonToggleModule,
+    MatTableModule,
     RouterModule.forRoot([
       {path: 'welcome',      
       component: WelcomeComponent,

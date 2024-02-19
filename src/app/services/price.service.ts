@@ -2,10 +2,11 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { SearchResult } from '../models/SearchResult'; // Adjust the import path as needed
+import { TimelineSummary } from '../models/TimelineSummary';
 
 @Injectable({
   providedIn: 'root'
@@ -56,21 +57,53 @@ export class PriceService {
   }
 
   fetchUsTickers(): Observable<string[]> {
-    const url = `https://api.finnhub.io/api/v1/stock/symbol?exchange=US&token=ch1hvi9r01qn6tg76npgch1hvi9r01qn6tg76nq0`;
-    return this.http.get<any[]>(url).pipe(
-      tap((response: any) => {
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3Mzc4YWY3ZC0xM2Y5LTRkM2EtOTIxMi05YjQ5ODg1MGUzOWYiLCJuYmYiOjE3MDc5MTI5MjcsImV4cCI6MTcwODA4NTcyNiwiaWF0IjoxNzA3OTEyOTI3LCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.6yXMWodN2edMkaVM_CKsKwkB-3IGsw9xS699K4lUaMw'
+    });
+    const url = `http://localhost:5130/api/Assets/assets/allowed`;
+  
+    // Ensure the HTTP GET request is typed to return any (to be safely cast later)
+    return this.http.get<any>(url, { headers: headers }).pipe(
+      tap(response => {
         console.log('fetchUsTickers results:', response);
       }),
-      map((response: any[]) => {
-        this.usTickers = response.map(tickerInfo => tickerInfo.symbol);
+      map(response => {
+        // Check if response is an array and each element is a string
+        if (Array.isArray(response) && response.every(element => typeof element === 'string')) {
+          this.usTickers = response;
+        } else {
+          // Handle the case where response is not an array of strings
+          console.error('Invalid response type:', response);
+          // You might want to throw an error or return an empty array instead
+          this.usTickers = [];
+        }
         return this.usTickers;
       }),
-      catchError((error) => {
+      catchError(error => {
         console.error('Error fetching US tickers:', error);
-        return throwError(error);
+        return of(this.usTickers); 
       })
     );
   }
+  
+
+  fetchTimelineSummary(aggregationType : string): Observable<TimelineSummary[]> {
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3Mzc4YWY3ZC0xM2Y5LTRkM2EtOTIxMi05YjQ5ODg1MGUzOWYiLCJuYmYiOjE3MDc5MTI5MjcsImV4cCI6MTcwODA4NTcyNiwiaWF0IjoxNzA3OTEyOTI3LCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.6yXMWodN2edMkaVM_CKsKwkB-3IGsw9xS699K4lUaMw'
+    });
+    let apiUrl = `http://localhost:5130/PastPrice/historic?aggregationType=${aggregationType}`; // API URL
+
+    return this.http.get<TimelineSummary[]>(apiUrl, { headers: headers }).pipe(
+      tap((response) => {
+        console.log('fetchTimelineSummary results:', response);
+      }),
+      catchError((error) => {
+        console.error('Error fetching fetchTimelineSummary:', error);
+        return throwError(() => new Error('Error fetching fetchTimelineSummary'));
+      })
+    );
+  }
+
   subscribeToTicker(ticker: string) {
     const message = JSON.stringify({ 'type': 'subscribe', 'symbol': ticker });
     console.log('Preparing to send message:', message);

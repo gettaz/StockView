@@ -1,27 +1,85 @@
-<table>
-  <tr>
-    <th>Asset Name</th>
-    <th>Ticker</th>
-    <th>Average Price Bought $</th>
-    <th>Amount</th>
-    <th>Broker Name</th>
-    <th>Current Asset Price</th>
-    <th>Price Sold</th>
-    <th>Category</th>
-    <th>Gain</th>
-  </tr>
-  <tr *ngFor="let asset of assets">
-    <td>{{ asset.assetName }}</td>
-    <td>{{ asset.ticker }}</td>
-    <td>{{ asset.averagePriceBought | number:'1.2-2' }}</td>
-    <td>{{ asset.totalAmount }}</td>
-    <td>{{ asset.brokerName }}</td>
-    <td>{{ asset.currentPrice }}</td>
-    <td>{{ asset.priceSold }}</td>
-    <td>{{ asset.category }}</td>
-    <td>{{ asset.calculateGain() | currency }}</td>
-  </tr>
+<div class="mat-elevation-z8">
+
+<table mat-table [dataSource]="assets" class="mat-elevation-z8" multiTemplateDataRows>
+  <ng-container matColumnDef="assetName">
+    <th mat-header-cell *matHeaderCellDef> Asset Name </th>
+    <td mat-cell *matCellDef="let asset"> {{asset.assetName}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="ticker">
+    <th mat-header-cell *matHeaderCellDef> Ticker </th>
+    <td mat-cell *matCellDef="let asset"> {{asset.ticker}} </td>
+  </ng-container>
+  
+  <ng-container matColumnDef="averagePriceBought">
+    <th mat-header-cell *matHeaderCellDef> Average Price Bought $ </th>
+    <td mat-cell *matCellDef="let asset"> {{asset.averagePriceBought | number:'1.2-2'}} </td>
+  </ng-container>
+  
+  <ng-container matColumnDef="amount">
+    <th mat-header-cell *matHeaderCellDef> Amount </th>
+    <td mat-cell *matCellDef="let asset"> {{asset.totalAmount}} </td>
+  </ng-container>
+  
+  <ng-container matColumnDef="brokerName">
+    <th mat-header-cell *matHeaderCellDef> Broker Name </th>
+    <td mat-cell *matCellDef="let asset"> {{asset.brokerName}} </td>
+  </ng-container>
+  
+  <ng-container matColumnDef="currentPrice">
+    <th mat-header-cell *matHeaderCellDef> Current Asset Price </th>
+    <td mat-cell *matCellDef="let asset"> {{asset.currentPrice}} </td>
+  </ng-container>
+  
+  <ng-container matColumnDef="priceSold">
+    <th mat-header-cell *matHeaderCellDef> Price Sold </th>
+    <td mat-cell *matCellDef="let asset"> {{asset.priceSold}} </td>
+  </ng-container>
+  
+  <ng-container matColumnDef="category">
+    <th mat-header-cell *matHeaderCellDef> Category </th>
+    <td mat-cell *matCellDef="let asset"> {{asset.category}} </td>
+  </ng-container>
+  
+  <ng-container matColumnDef="gain">
+    <th mat-header-cell *matHeaderCellDef> Gain </th>
+    <td mat-cell *matCellDef="let asset"> {{asset.calculateGain() | currency}} </td>
+  </ng-container>
+
+ 
+  <!-- Expand Toggle Column -->
+  <ng-container matColumnDef="expand">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let asset">
+      <button mat-icon-button (click)="toggleRow(asset); $event.stopPropagation()">
+        <mat-icon>{{expandedAsset === asset ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <!-- Expanded Detail Row -->
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell *matCellDef="let asset" [attr.colspan]="displayedColumns.length + 1">
+      <div *ngIf="isRowExpanded(asset)" class="expanded-row-content">
+        <!-- Loop through each sub-asset related to this asset -->
+        <div *ngFor="let subAsset of expandedAssetDetails" class="sub-asset-row">
+          <div class="sub-asset-cell"><strong>Amount:</strong> {{subAsset.amount}}</div>
+          <div class="sub-asset-cell"><strong>Price Bought:</strong> {{subAsset.purchasePrice | number:'1.2-2'}}</div>
+        </div>
+      </div>
+    </td>
+  </ng-container>
+
+
+  
+  <!-- Table Row Definitions -->
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let asset; columns: displayedColumns;" (click)="toggleRow(asset)"></tr>
+  <!-- Expanded Detail Row -->
+  <tr mat-row *matRowDef="let asset; columns: ['expandedDetail'];" class="expanded-row" [hidden]="!isRowExpanded(asset)"></tr>
 </table>
+
+</div>
 
 
 <button class="btn btn-primary" (click)="openModal()">Add Asset</button>
@@ -88,7 +146,7 @@
             </div>
             <div class="form-group">
               <label for="brokerName">Broker:</label>
-              <input type="text" class="form-control" id="brokerName" formControlName="brokerName" required (input)="searchBroker($any($event.target).value)" autocomplete="off">
+              <input type="text" class="form-control" id="brokerName" formControlName="brokerName"(input)="searchBroker($any($event.target).value)" autocomplete="off">
               <!-- Dropdown for search results, visible only if there are results -->
               <div *ngIf="classifications.length > 0 && activeField === 'broker'" class="dropdown"
                 (click)="$event.stopPropagation()">
@@ -101,8 +159,7 @@
             </div>
             <div class="form-group">
               <label for="categoryName">Category:</label>
-              <input type="text" class="form-control" id="categoryName" formControlName="categoryName" required (input)="searchCategory($any($event.target).value)" autocomplete="off">
-              <!-- Dropdown for search results, visible only if there are results -->
+              <input type="text" class="form-control" id="categoryName" formControlName="categoryName" (input)="searchCategory($any($event.target).value)" autocomplete="off">
               <div *ngIf="classifications.length > 0 && activeField === 'category'" class="dropdown"
                 (click)="$event.stopPropagation()">
                 <ul class="suggestions-list">

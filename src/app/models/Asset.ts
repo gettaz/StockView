@@ -1,7 +1,7 @@
 export class Asset {
   assetName: string;
   ticker: string;
-  priceBought: number;
+  purchasePrice: number;
   amount: number;
   brokerName: string;
   dateBought: Date;
@@ -13,7 +13,7 @@ export class Asset {
   constructor(
     assetName: string,
     ticker: string,
-    priceBought: number,
+    purchasePrice: number,
     amount: number,
     brokerName: string,
     dateBought: Date,
@@ -24,7 +24,7 @@ export class Asset {
   ) {
     this.assetName = assetName;
     this.ticker = ticker;
-    this.priceBought = priceBought;
+    this.purchasePrice = purchasePrice;
     this.amount = amount;
     this.brokerName = brokerName;
     this.dateBought = dateBought;

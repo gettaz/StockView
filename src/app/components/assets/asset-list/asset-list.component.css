@@ -16,3 +16,15 @@
 .suggestions-list li:hover {
     background-color: #f1f1f1;
 }
+.expanded-row-content .sub-asset-row {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .expanded-row-content .sub-asset-cell {
+    flex: 1; /* Adjust based on the number of columns */
+    padding: 8px; /* Match your table's cell padding */
+    border-bottom: 1px solid #e0e0e0; /* Match your table's cell border */
+    box-sizing: border-box;
+  }

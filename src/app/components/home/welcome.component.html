@@ -2,25 +2,20 @@
   <div class="card-header">
     {{ pageTitle }}
   </div>
-  <div class="card-body">
+  <div class="card">
     <div class="container-fluid">
       <div class="charts-flex-container">
-        <!-- Container for Pie Chart and its Button -->
-        <!-- Button for Pie Chart -->
-        <div class="switch-container">
-          <input type="checkbox" id="chartToggle" class="chart-toggle" (change)="toggleChartData()">
-          <label for="chartToggle" class="chart-label">
-            <span class="broker">Broker</span>
-            <span class="categories">Categories</span>
-          </label>
-        </div>
-        <div class="chart-with-button">
           <!-- Pie Chart Canvas -->
           <div class="chart-container">
+            <div class="switch-container">
+              <input type="checkbox" id="chartToggle" class="chart-toggle" (change)="toggleChartData()">
+               <label for="chartToggle" class="chart-label">
+                <span class="broker">Broker</span>
+                <span class="categories">Categories</span>
+              </label>
+            </div>
             <canvas id="myChart"></canvas>
           </div>
-        </div>
-
         <!-- Container for Timeline Chart and its Toggles -->
         <div class="chart-with-toggles">
           <!-- Dropdown for Time Span -->
@@ -33,9 +28,8 @@
           </select>
         </form>
           <!-- Timeline Chart Canvas -->
-          <div class="chart-container">
             <canvas id="timelineChart"></canvas>
-          </div>
+
           <!-- Toggle Buttons for Timeline Chart -->
           <div class="text-center">
             <mat-button-toggle-group>
@@ -45,8 +39,7 @@
             </mat-button-toggle-group>
           </div>
         </div>
-      </div>
-      
+    </div>
     </div>
   </div>
 </div>
