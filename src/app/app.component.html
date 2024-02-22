@@ -1,8 +1,9 @@
-<div style="text-align:center">
-  <h1>
-    TaDala! Welcome to {{title}}!!
-  </h1>
-  <footer>
-    <p>footer</p>
-  </footer>
+<nav class='navbar navbar-expand navbar-light bg-light'>
+  <ul class='nav nav-pills'>
+    <li><a class='nav-link' routerLink='/welcome'>Home</a></li>
+    <li><a class='nav-link' routerLink='/assets'>Asset List</a></li>
+  </ul>
+</nav>
+<div class='container'>
+  <router-outlet></router-outlet>
 </div>

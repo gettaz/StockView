@@ -58,9 +58,9 @@ export class PriceService {
 
   fetchUsTickers(): Observable<string[]> {
     const headers = new HttpHeaders({
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3Mzc4YWY3ZC0xM2Y5LTRkM2EtOTIxMi05YjQ5ODg1MGUzOWYiLCJuYmYiOjE3MDc5MTI5MjcsImV4cCI6MTcwODA4NTcyNiwiaWF0IjoxNzA3OTEyOTI3LCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.6yXMWodN2edMkaVM_CKsKwkB-3IGsw9xS699K4lUaMw'
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3Mzc4YWY3ZC0xM2Y5LTRkM2EtOTIxMi05YjQ5ODg1MGUzOWYiLCJuYmYiOjE3MDg1OTc4NzcsImV4cCI6MTcwODc3MDY3NywiaWF0IjoxNzA4NTk3ODc3LCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.lQadD_SBIjDfrOR5nEGicCbreNR3z12Of01feF-Lb0k'
     });
-    const url = `http://localhost:5130/api/Assets/assets/allowed`;
+    const url = `http://localhost:5130/api/assets/allowed`;
   
     // Ensure the HTTP GET request is typed to return any (to be safely cast later)
     return this.http.get<any>(url, { headers: headers }).pipe(
@@ -89,7 +89,7 @@ export class PriceService {
 
   fetchTimelineSummary(aggregationType : string): Observable<TimelineSummary[]> {
     const headers = new HttpHeaders({
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3Mzc4YWY3ZC0xM2Y5LTRkM2EtOTIxMi05YjQ5ODg1MGUzOWYiLCJuYmYiOjE3MDc5MTI5MjcsImV4cCI6MTcwODA4NTcyNiwiaWF0IjoxNzA3OTEyOTI3LCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.6yXMWodN2edMkaVM_CKsKwkB-3IGsw9xS699K4lUaMw'
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3Mzc4YWY3ZC0xM2Y5LTRkM2EtOTIxMi05YjQ5ODg1MGUzOWYiLCJuYmYiOjE3MDg1OTc4NzcsImV4cCI6MTcwODc3MDY3NywiaWF0IjoxNzA4NTk3ODc3LCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.lQadD_SBIjDfrOR5nEGicCbreNR3z12Of01feF-Lb0k'
     });
     let apiUrl = `http://localhost:5130/PastPrice/historic?aggregationType=${aggregationType}`; // API URL
 

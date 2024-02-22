@@ -4,6 +4,9 @@ import { Subject } from 'rxjs';
 import { AssetService } from '../../../services/asset.service';
 import { PriceService } from '../../../services/price.service';
 import {MatIconModule} from '@angular/material/icon';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 import {
   debounceTime,
@@ -76,7 +79,7 @@ export class AssetListComponent implements OnInit {
   isRowExpanded(element: any): boolean {
     return this.expandedAsset === element;
   }
-toggleRow(asset: Asset) {
+  toggleRow(asset: Asset) {
   if (this.expandedAsset === asset) {
     // If the same row is clicked again, collapse it
     this.expandedAsset = null;
@@ -85,18 +88,16 @@ toggleRow(asset: Asset) {
     this.expandedAsset = asset;
     console.log("toggleRow");
     // Make an API call to fetch details
-    //this.assetService.getAssetDetails(asset.id).subscribe(details => {
-     this.expandedAssetDetails = [
-      {  assetName: 'Asset 1', ticker: 'A1', purchasePrice: 100, amount: 10, brokerName: 'Broker 1', currentPrice: 150, priceSold: 0, category: 'Category 1',  dateBought: new Date(2021, 0, 1) ,  dateSold: new Date(2021, 0, 1)   },
-      {  assetName: 'Asset 2', ticker: 'A2', purchasePrice: 200, amount: 20, brokerName: 'Broker 2', currentPrice: 250, priceSold: 0, category: 'Category 2',  dateBought: new Date(2021, 0, 1) ,  dateSold: new Date(2021, 0, 1)   },
-      // Add more assets as needed
-    ];
-    };
+    this.assetService.getAssetDetails(asset).subscribe(
+      (details: Asset[]) => {
+        this.expandedAssetDetails = details; // Assign the emitted value to expandedAssetDetails
+      },
+      error => {
+        console.error('Error fetching asset details:', error);
+      }
+    );
+  }}
 
-  }
-
-
-  
 
   set newAsset(value: Asset) {
     this._newAsset = new Asset(
@@ -303,6 +304,7 @@ private initializeForm(): void {
     amount: [0, [Validators.required, Validators.min(1)]],
     brokerName: ['', Validators.required],
     categoryName: ['', Validators.required],
+    dateBought: [null, Validators.required]
   })
 }
 

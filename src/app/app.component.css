@@ -1,4 +1,14 @@
-.nav-link {
-    font-size: large;
+:host{
+    display: grid;
+    grid-template-columns: 160px auto 80px;
+    grid-template-rows: auto 1fr;
 }
-  
+
+.navbar  {
+    font-size: large;
+    grid-column: 2;
+}
+
+.container {
+    grid-column: 2;
+}

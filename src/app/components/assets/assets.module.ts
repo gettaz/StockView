@@ -6,7 +6,10 @@ import { AssetListComponent } from './asset-list/asset-list.component';
 import { savedAssetsResolver } from './asset-list/saved-assets.resolver';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -17,6 +20,10 @@ import { MatIconModule } from '@angular/material/icon';
     ReactiveFormsModule,
     MatTableModule,
     MatIconModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatNativeDateModule,
+    MatInputModule,
     RouterModule.forChild([
       { path: '', 
       component: AssetListComponent,

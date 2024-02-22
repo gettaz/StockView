@@ -16,13 +16,16 @@ import { DataTablesModule } from "angular-datatables";
 import { welcomeResolverResolver } from './components/home/welcome-resolver.resolver';
 import { ClassificationService } from './services/classification.service';
 import { MatTableModule } from '@angular/material/table';
-
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
     AppComponent,
     WelcomeComponent,
-    PagenotfoundComponent
+    PagenotfoundComponent,
   ],
   imports: [
     HttpClientModule,
@@ -31,6 +34,10 @@ import { MatTableModule } from '@angular/material/table';
     DataTablesModule.forRoot(),
     MatButtonToggleModule,
     MatTableModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatFormFieldModule,
     RouterModule.forRoot([
       {path: 'welcome',      
       component: WelcomeComponent,
