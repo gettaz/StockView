@@ -36,8 +36,8 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.0.0",
-    "@angular/cli": "^16.0.0",
-    "@angular/compiler-cli": "^17.2.2",
+    "@angular/cli": "^16.2.12",
+    "@angular/compiler-cli": "^16.2.12",
     "@types/chart.js": "^2.9.41",
     "@types/datatables.net": "^1.10.21",
     "@types/jasmine": "~4.3.0",
