@@ -32,3 +32,33 @@
   .mat-form-field {
     margin-right: 12px;
   }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-content: space-between; 
+    padding: 1rem; /* Adjust padding as needed */
+    flex-flow: column wrap; 
+}
+.add-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent black */
+  display: flex;
+  justify-content: center;
+  align-items: center; /* This centers the modal dialog */
+  z-index: 1040; /* Ensures it's above the content but below the modal dialog */
+}
+.modal-dialog {
+  max-width: 500px; /* Adjust based on your design */
+  width: 90%; /* Responsive width */
+  max-height: 90vh; /* Allows for scrolling */
+  overflow-y: auto; /* Enables scrolling within the modal */
+  background-color: #fff; /* Assuming you want a white background */
+  border-radius: 8px; /* Optional: for styled corners */
+  box-shadow: 0 4px 6px rgba(0,0,0,.1); /* Optional: for a slight shadow */
+  z-index: 1050; /* Higher than .add-modal to be on top */
+}

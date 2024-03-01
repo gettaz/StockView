@@ -4,7 +4,7 @@
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 
 div.card-header {
- font-size: large;
+  font-size: large;
 }
 
 div.card {
@@ -16,19 +16,62 @@ div.card {
 }
 
 a {
-  text-decoration: none; 
+  text-decoration: none;
 }
+
 a:hover {
   text-decoration: underline;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.cdk-overlay-container {
+  z-index: 1100;
+}
+
+.body-freeze {
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+.mdc-switch__icons {
+  display: none; /* This hides the icons */
+}

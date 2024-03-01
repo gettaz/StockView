@@ -58,7 +58,7 @@ export class PriceService {
 
   fetchUsTickers(): Observable<string[]> {
     const headers = new HttpHeaders({
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3Mzc4YWY3ZC0xM2Y5LTRkM2EtOTIxMi05YjQ5ODg1MGUzOWYiLCJuYmYiOjE3MDg1OTc4NzcsImV4cCI6MTcwODc3MDY3NywiaWF0IjoxNzA4NTk3ODc3LCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.lQadD_SBIjDfrOR5nEGicCbreNR3z12Of01feF-Lb0k'
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3Mzc4YWY3ZC0xM2Y5LTRkM2EtOTIxMi05YjQ5ODg1MGUzOWYiLCJuYmYiOjE3MDkyMTA4ODYsImV4cCI6MTcwOTM4MzY4NiwiaWF0IjoxNzA5MjEwODg2LCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.DuDyhhl6jSqw_sWJECOJVeTU33ae2T3SvWbedulcy74'
     });
     const url = `http://localhost:5130/api/assets/allowed`;
   
@@ -89,7 +89,7 @@ export class PriceService {
 
   fetchTimelineSummary(aggregationType : string): Observable<TimelineSummary[]> {
     const headers = new HttpHeaders({
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3Mzc4YWY3ZC0xM2Y5LTRkM2EtOTIxMi05YjQ5ODg1MGUzOWYiLCJuYmYiOjE3MDg1OTc4NzcsImV4cCI6MTcwODc3MDY3NywiaWF0IjoxNzA4NTk3ODc3LCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.lQadD_SBIjDfrOR5nEGicCbreNR3z12Of01feF-Lb0k'
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI3Mzc4YWY3ZC0xM2Y5LTRkM2EtOTIxMi05YjQ5ODg1MGUzOWYiLCJuYmYiOjE3MDkyMTA4ODYsImV4cCI6MTcwOTM4MzY4NiwiaWF0IjoxNzA5MjEwODg2LCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.DuDyhhl6jSqw_sWJECOJVeTU33ae2T3SvWbedulcy74'
     });
     let apiUrl = `http://localhost:5130/PastPrice/historic?aggregationType=${aggregationType}`; // API URL
 
@@ -128,8 +128,6 @@ export class PriceService {
         console.log('Search results:', response);
       }),
       map((response: any) => {
-        // ... existing processing code ...
-        // Filter to include only tickers that are in the usTickers list
         return response.result.filter((result: SearchResult) => this.usTickers.includes(result.symbol));
       }),
 

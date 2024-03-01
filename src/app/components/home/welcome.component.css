@@ -30,22 +30,6 @@
   align-items: stretch;
 }
 
-.toggle-container {
-  justify-content: center;
-  gap: 10px;
-  flex: 0;
-}
-
-.switch-container {
-  width: 30px;
-}
-
-.broker,
-.categories {
-  flex: 1; /* Take equal width */
-  text-align: center;
-}
-
 @media (max-width: 767px) {
   .charts-flex-container {
     flex-direction: column;
@@ -59,35 +43,14 @@
   }
 }
 
-
-
-/* Toggle Switch Styling */
-.chart-label {
+.mat-slide-toggle-left {
+  margin-right: 8px;
+  vertical-align: top;
   cursor: pointer;
-  width: 40px;
-  height: 80px;
-  background: grey;
-  border-radius: 50px;
-  position: relative;
-  text-indent: 0;
-  line-height: 50px;
-  color: black;
 }
 
-.chart-label:after {
-  content: '';
-  position: absolute;
-  top: 10px;
-  left: 5px;
-  width: 20px;
-  height: 20px;
-  background: #fff;
-  border-radius: 50%;
-  transition: 0.3s;
+.mat-slide-toggle-left {
+  cursor: default;
+  pointer-events: none;
 }
-
-.chart-toggle:checked + .chart-label:after {
-  top: calc(100% - 30px); /* Adjusted for alignment */
-}
-
 

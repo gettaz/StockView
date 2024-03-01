@@ -8,7 +8,8 @@ export class Asset {
   dateSold: Date | null;
   currentPrice: number;
   priceSold: number | null;
-  category: string;
+  categoryName: string;
+  id: number | null;
 
   constructor(
     assetName: string,
@@ -20,7 +21,8 @@ export class Asset {
     dateSold: Date | null,
     currentPrice: number,
     priceSold: number | null,
-    category: string = 'No Category'
+    categoryName: string = 'No Category',
+    id: number| null
   ) {
     this.assetName = assetName;
     this.ticker = ticker;
@@ -31,6 +33,7 @@ export class Asset {
     this.dateSold = dateSold;
     this.currentPrice = currentPrice;
     this.priceSold = priceSold;
-    this.category = category;
+    this.categoryName = categoryName;
+    this.id = id;
   }
 }

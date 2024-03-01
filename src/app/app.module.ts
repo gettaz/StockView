@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import { WelcomeComponent } from './components/home/welcome.component';
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
@@ -20,6 +21,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -36,8 +38,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatTableModule,
     MatNativeDateModule,
     MatDatepickerModule,
+    MatSlideToggleModule,
     MatInputModule,
     MatFormFieldModule,
+    FormsModule,
     RouterModule.forRoot([
       {path: 'welcome',      
       component: WelcomeComponent,

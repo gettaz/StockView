@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { ChartDataItem } from '../../models/ChartDataItem';
 import { TimelineSummary } from 'src/app/models/TimelineSummary';
 import { Chart, registerables } from 'chart.js';
@@ -7,6 +7,7 @@ import { ClassificationService } from 'src/app/services/classification.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
 import { PriceService } from 'src/app/services/price.service';
+import { firstValueFrom  } from 'rxjs';
 
 Chart.register(...registerables);
 
@@ -24,7 +25,7 @@ export class WelcomeComponent implements OnInit {
   private pieChart: any; // Instance for the pie chart
   private timelineChart: any; // Instance for the timeline chart
   public showCategoryData = true; // Toggle between category and broker data
-  private currentView: 'all' | 'category' | 'broker' = 'all'; // default view
+  public currentView: 'all' | 'category' | 'broker' = 'all'; // default view
   public currentTimeSpan: '7days' | 'month' | 'YTD' = '7days';
   public chartData: ChartDataItem[] = []; // Initialize with an empty array
   public timeLinePrices: TimelineSummary = {
@@ -36,16 +37,21 @@ export class WelcomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.chartData = (this.activatedRoute.snapshot.data as any).welcome;
+    this.chartData = (this.activatedRoute.snapshot.data['welcome'].chartData as any);
+    this.timeLinePrices = (this.activatedRoute.snapshot.data['welcome'].timelineData as any);
+
     this.updatePieChart(this.chartData);
-    this.updateTimelineChart(this.currentTimeSpan);
+    this.filterAndRenderTimelineChart(this.currentTimeSpan);
   }
 
-  private updateTimelineChart(timeRange: string): void {
-    this.fetchTimelineData(this.currentView);
-    if (this.timeLinePrices != null)
+  private async updateTimelineChart(timeRange: string): Promise<void> {
+    await this.fetchTimelineData(this.currentView); 
+
+    if (this.timeLinePrices != null) {
       this.filterAndRenderTimelineChart(this.currentTimeSpan);
+    }
   }
+  
 
   public toggleView(view: 'all' | 'category' | 'broker'): void {
     this.currentView = view;
@@ -257,14 +263,20 @@ export class WelcomeComponent implements OnInit {
   
   
 
-    private fetchTimelineData(view: 'all' | 'category' | 'broker'): void {
+  private fetchTimelineData(view: 'all' | 'category' | 'broker'): Promise<void> {
+    return new Promise((resolve, reject) => {
       this.priceService.fetchTimelineSummary(view).subscribe({
         next: (data) => {
           this.timeLinePrices = this.transformToPortfolioSummary(data);
+          resolve();
         },
-        error: (error) => console.error('Error fetching timeline data:', error)
+        error: (error) => {
+          console.error('Error fetching timeline data:', error);
+          reject(error);
+        }
       });
-    }
+    });
+  }  
 
   private transformToPortfolioSummary(data: any): TimelineSummary {
     // Check if data and summaries exist

@@ -1,199 +1,198 @@
 <div class="mat-elevation-z8">
 
-<table mat-table [dataSource]="assets" class="mat-elevation-z8" multiTemplateDataRows>
-  <ng-container matColumnDef="assetName">
-    <th mat-header-cell *matHeaderCellDef> Asset Name </th>
-    <td mat-cell *matCellDef="let asset"> {{asset.assetName}} </td>
-  </ng-container>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" multiTemplateDataRows>
+    <ng-container matColumnDef="assetName">
+      <th mat-header-cell *matHeaderCellDef> Asset Name </th>
+      <td mat-cell *matCellDef="let asset"> {{asset.assetName}} </td>
+    </ng-container>
 
-  <ng-container matColumnDef="ticker">
-    <th mat-header-cell *matHeaderCellDef> Ticker </th>
-    <td mat-cell *matCellDef="let asset"> {{asset.ticker}} </td>
-  </ng-container>
-  
-  <ng-container matColumnDef="averagePriceBought">
-    <th mat-header-cell *matHeaderCellDef> Average Price Bought $ </th>
-    <td mat-cell *matCellDef="let asset"> {{asset.averagePriceBought | number:'1.2-2'}} </td>
-  </ng-container>
-  
-  <ng-container matColumnDef="amount">
-    <th mat-header-cell *matHeaderCellDef> Amount </th>
-    <td mat-cell *matCellDef="let asset"> {{asset.totalAmount}} </td>
-  </ng-container>
-  
-  <ng-container matColumnDef="brokerName">
-    <th mat-header-cell *matHeaderCellDef> Broker Name </th>
-    <td mat-cell *matCellDef="let asset"> {{asset.brokerName}} </td>
-  </ng-container>
+    <ng-container matColumnDef="ticker">
+      <th mat-header-cell *matHeaderCellDef> Ticker </th>
+      <td mat-cell *matCellDef="let asset"> {{asset.ticker}} </td>
+    </ng-container>
 
-  <ng-container matColumnDef="currentPrice">
-    <th mat-header-cell *matHeaderCellDef> Current Asset Price </th>
-    <td mat-cell *matCellDef="let asset"> {{asset.currentPrice}} </td>
-  </ng-container>
-  
-  <ng-container matColumnDef="priceSold">
-    <th mat-header-cell *matHeaderCellDef> Price Sold </th>
-    <td mat-cell *matCellDef="let asset"> {{asset.priceSold}} </td>
-  </ng-container>
-  
-  <ng-container matColumnDef="category">
-    <th mat-header-cell *matHeaderCellDef> Category </th>
-    <td mat-cell *matCellDef="let asset"> {{asset.category}} </td>
-  </ng-container>
-  
-  <ng-container matColumnDef="gain">
-    <th mat-header-cell *matHeaderCellDef> Gain </th>
-    <td mat-cell *matCellDef="let asset"> {{asset.calculateGain() | currency}} </td>
-  </ng-container>
+    <ng-container matColumnDef="averagePriceBought">
+      <th mat-header-cell *matHeaderCellDef> Average Price Bought $ </th>
+      <td mat-cell *matCellDef="let asset"> {{asset.averagePriceBought | number:'1.2-2'}} </td>
+    </ng-container>
 
- 
-  <!-- Expand Toggle Column -->
-  <ng-container matColumnDef="expand">
-    <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let asset">
-      <button mat-icon-button (click)="toggleRow(asset); $event.stopPropagation()">
-        <mat-icon>{{expandedAsset === asset ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</mat-icon>
-      </button>
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="amount">
+      <th mat-header-cell *matHeaderCellDef> Amount </th>
+      <td mat-cell *matCellDef="let asset"> {{asset.totalAmount}} </td>
+    </ng-container>
 
-  <!-- Expanded Detail Row -->
-  <ng-container matColumnDef="expandedDetail">
-    <td mat-cell *matCellDef="let asset" [attr.colspan]="displayedColumns.length + 1">
-      <div *ngIf="isRowExpanded(asset)" class="expanded-row-content">
-        <!-- Loop through each sub-asset related to this asset -->
-        <div *ngFor="let subAsset of expandedAssetDetails" class="sub-asset-row">
-          <div class="sub-asset-cell"><strong>Amount:</strong> {{subAsset.amount}}</div>
-          <div class="sub-asset-cell"><strong>Price Bought:</strong> {{subAsset.purchasePrice | number:'1.2-2'}}</div>
-          <div class="sub-asset-cell"><strong>Date Bought:</strong> {{subAsset.dateBought }}</div>
+    <ng-container matColumnDef="brokerName">
+      <th mat-header-cell *matHeaderCellDef> Broker Name </th>
+      <td mat-cell *matCellDef="let asset"> {{asset.brokerName}} </td>
+    </ng-container>
 
+    <ng-container matColumnDef="currentPrice">
+      <th mat-header-cell *matHeaderCellDef> Current Asset Price </th>
+      <td mat-cell *matCellDef="let asset"> {{asset.currentPrice}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="priceSold">
+      <th mat-header-cell *matHeaderCellDef> Price Sold </th>
+      <td mat-cell *matCellDef="let asset"> {{asset.priceSold}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="category">
+      <th mat-header-cell *matHeaderCellDef> Category </th>
+      <td mat-cell *matCellDef="let asset"> {{asset.category}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="gain">
+      <th mat-header-cell *matHeaderCellDef> Gain </th>
+      <td mat-cell *matCellDef="let asset"> {{asset.calculateGain() | currency}} </td>
+    </ng-container>
+
+
+    <!-- Expand Toggle Column -->
+    <ng-container matColumnDef="expand">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let asset">
+        <button mat-icon-button (click)="toggleRow(asset); $event.stopPropagation()">
+          <mat-icon>{{expandedAsset === asset ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Expanded Detail Row -->
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let asset" [attr.colspan]="displayedColumns.length + 1">
+        <div *ngIf="isRowExpanded(asset)" class="expanded-row-content">
+          <!-- Loop through each sub-asset related to this asset -->
+          <div *ngFor="let subAsset of expandedAssetDetails" class="sub-asset-row">
+            <div class="sub-asset-cell"><strong>Amount:</strong> {{subAsset.amount}}</div>
+            <div class="sub-asset-cell"><strong>Price Bought:</strong> {{subAsset.purchasePrice | number:'1.2-2'}}</div>
+            <div class="sub-asset-cell"><strong>Date Bought:</strong> {{subAsset.dateBought }}</div>
+            <button
+            mat-button
+            class="button-remove"
+            (click)="onDelete(asset, subAsset); $event.stopPropagation()"
+            >
+            Delete
+          </button>
+          </div>
         </div>
-      </div>
-    </td>
-  </ng-container>
+      </td>
+    </ng-container>
 
 
-  
-  <!-- Table Row Definitions -->
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let asset; columns: displayedColumns;" (click)="toggleRow(asset)"></tr>
-  <!-- Expanded Detail Row -->
-  <tr mat-row *matRowDef="let asset; columns: ['expandedDetail'];" class="expanded-row" [hidden]="!isRowExpanded(asset)"></tr>
-</table>
+    <!-- Table Row Definitions -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let asset; columns: displayedColumns;" (click)="toggleRow(asset)"></tr>
+    <!-- Expanded Detail Row -->
+    <tr mat-row *matRowDef="let asset; columns: ['expandedDetail'];" class="expanded-row"
+      [hidden]="!isRowExpanded(asset)"></tr>
+  </table>
 
 </div>
-
 
 <button class="btn btn-primary" (click)="openModal()">Add Asset</button>
 
 <!-- Add Asset Modal -->
-<div (click)="onComponentClick()">
-  <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': showForm}"
-    [ngStyle]="{'display': showForm ? 'block' : 'none'}">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Add Asset</h5>
-          <button type="button" class="close" aria-label="Close" (click)="closeModal()">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form [formGroup]="assetForm" (ngSubmit)="onAssetAdded()">
-            <!-- Input fields for asset properties -->
-            <div class="form-group">
-              <label for="assetName">Asset Name:</label>
-              <input type="text" class="form-control" id="assetName" formControlName="assetName"
-                 (input)="searchTicker(assetForm.get('assetName')!.value, 'assetName')" autocomplete="off">
-                 <div *ngIf="assetForm.get('assetName')!.touched && isNameNotEmpty('assetName') &&assetForm.get('assetName')!.touched && !assetNameSelected " class="text-danger">
-                  Please choose an asset name from the dropdown.
-                </div>
-                </div>
-              <!-- Dropdown for search results, visible only if there are results -->
-              <div *ngIf="tickerSearchResults.length > 0  && activeField === 'assetName'" class="dropdown"
-                (click)="$event.stopPropagation()">
-                <ul class="suggestions-list">
-                  <li *ngFor="let result of tickerSearchResults" (click)="selectTicker(result)">
-                    {{ result.displaySymbol }} - {{ result.description }}
-                  </li>
-                </ul>
-              </div>
-            <div class="form-group">
-              <!-- Label for the Ticker input -->
-              <label for="ticker">Ticker:</label>
-              <!-- Ticker input field with two-way data binding and input event handling -->
-              <input type="text" class="form-control" id="ticker" formControlName="ticker" 
-                (input)="searchTicker($any($event.target).value, 'ticker')" autocomplete="off">
-                <div *ngIf="assetForm.get('assetName')!.touched && isNameNotEmpty('ticker') && !tickerSelected " class="text-danger">
-                  Please choose an asset ticker from the dropdown.
-                </div>
-              <!-- Dropdown for search results, visible only if there are results -->
-              <div *ngIf="tickerSearchResults.length > 0  && activeField === 'ticker'" class="dropdown"
-                (click)="$event.stopPropagation()">
-                <ul class="suggestions-list">
-                  <li *ngFor="let result of tickerSearchResults" (click)="selectTicker(result)">
-                    {{ result.displaySymbol }} - {{ result.description }}
-                  </li>
-                </ul>
-              </div>
+<div class="add-modal" tabindex="-1" role="dialog" [ngClass]="{'show': showForm}"
+  [ngStyle]="{'display': showForm ? 'block' : 'none'}" (click)="onComponentClick()">
+  <div class="modal-dialog" role="document" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Asset</h5>
+        <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="assetForm" (ngSubmit)="onAssetAdded()">
+          <!-- Input fields for asset properties -->
+          <div class="form-group">
+            <label for="assetName">Asset Name:</label>
+            <input type="text" class="form-control" id="assetName" formControlName="assetName"
+              (input)="searchTicker(assetForm.get('assetName')!.value, 'assetName')" autocomplete="off">
+            <div
+              *ngIf="assetForm.get('assetName')!.touched && isNameNotEmpty('assetName') &&assetForm.get('assetName')!.touched && !assetNameSelected "
+              class="text-danger">
+              Please choose an asset name from the dropdown.
             </div>
-            <div class="form-group">
-              <mat-form-field appearance="fill">
-                <mat-label>Date Bought</mat-label>
-                <input matInput [matDatepicker]="datePicker" formControlName="dateBought">
-                <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-                <mat-hint>MM/DD/YYYY</mat-hint>
-                <mat-datepicker #datePicker></mat-datepicker>
-              </mat-form-field>
-              <button mat-raised-button (click)="datePicker.open()">Open</button>
+          </div>
+          <!-- Dropdown for search results, visible only if there are results -->
+          <div *ngIf="tickerSearchResults.length > 0  && activeField === 'assetName'" class="dropdown"
+            (click)="$event.stopPropagation()">
+            <ul class="suggestions-list">
+              <li *ngFor="let result of tickerSearchResults" (click)="selectTicker(result)">
+                {{ result.displaySymbol }} - {{ result.description }}
+              </li>
+            </ul>
+          </div>
+          <div class="form-group">
+            <!-- Label for the Ticker input -->
+            <label for="ticker">Ticker:</label>
+            <!-- Ticker input field with two-way data binding and input event handling -->
+            <input type="text" class="form-control" id="ticker" formControlName="ticker"
+              (input)="searchTicker($any($event.target).value, 'ticker')" autocomplete="off">
+            <div *ngIf="assetForm.get('assetName')!.touched && isNameNotEmpty('ticker') && !tickerSelected "
+              class="text-danger">
+              Please choose an asset ticker from the dropdown.
             </div>
-            <mat-form-field class="example-full-width">
-              <mat-label>Choose a date</mat-label>
-              <input matInput [matDatepicker]="picker">
+            <!-- Dropdown for search results, visible only if there are results -->
+            <div *ngIf="tickerSearchResults.length > 0  && activeField === 'ticker'" class="dropdown"
+              (click)="$event.stopPropagation()">
+              <ul class="suggestions-list">
+                <li *ngFor="let result of tickerSearchResults" (click)="selectTicker(result)">
+                  {{ result.displaySymbol }} - {{ result.description }}
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="form-group">
+            <mat-form-field appearance="fill">
+              <mat-label>Date Bought</mat-label>
+              <input matInput [matDatepicker]="datePicker" formControlName="dateBought" [max]="maxDate">
+              <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
               <mat-hint>MM/DD/YYYY</mat-hint>
-              <mat-datepicker #picker></mat-datepicker>
+              <mat-datepicker #datePicker></mat-datepicker>
             </mat-form-field>
-            <button mat-raised-button (click)="picker.open()">Open</button>
-            <div class="form-group">
-              <label for="priceBought">Price Bought:</label>
-              <input type="number" class="form-control" id="priceBought" formControlName="priceBought" required>
+          </div>
+          <div class="form-group">
+            <label for="priceBought">Price Bought:</label>
+            <input type="number" class="form-control" id="priceBought" formControlName="priceBought" required>
+          </div>
+          <div class="form-group">
+            <label for="amount">Amount:</label>
+            <input type="number" class="form-control" id="amount" formControlName="amount" required>
+          </div>
+          <div class="form-group">
+            <label for="brokerName">Broker:</label>
+            <input type="text" class="form-control" id="brokerName" formControlName="brokerName"
+              (input)="searchBroker($any($event.target).value)" autocomplete="off">
+            <!-- Dropdown for search results, visible only if there are results -->
+            <div *ngIf="classifications.length > 0 && activeField === 'broker'" class="dropdown"
+              (click)="$event.stopPropagation()">
+              <ul class="suggestions-list">
+                <li *ngFor="let result of classifications" (click)="selectBroker(result)">
+                  {{ result}}
+                </li>
+              </ul>
             </div>
-            <div class="form-group">
-              <label for="amount">Amount:</label>
-              <input type="number" class="form-control" id="amount" formControlName="amount"
-                required>
+          </div>
+          <div class="form-group">
+            <label for="categoryName">Category:</label>
+            <input type="text" class="form-control" id="categoryName" formControlName="categoryName"
+              (input)="searchCategory($any($event.target).value)" autocomplete="off">
+            <div *ngIf="classifications.length > 0 && activeField === 'category'" class="dropdown"
+              (click)="$event.stopPropagation()">
+              <ul class="suggestions-list">
+                <li *ngFor="let result of classifications" (click)="selectCategory(result)">
+                  {{ result}}
+                </li>
+              </ul>
             </div>
-            <div class="form-group">
-              <label for="brokerName">Broker:</label>
-              <input type="text" class="form-control" id="brokerName" formControlName="brokerName"(input)="searchBroker($any($event.target).value)" autocomplete="off">
-              <!-- Dropdown for search results, visible only if there are results -->
-              <div *ngIf="classifications.length > 0 && activeField === 'broker'" class="dropdown"
-                (click)="$event.stopPropagation()">
-                <ul class="suggestions-list">
-                  <li *ngFor="let result of classifications" (click)="selectBroker(result)">
-                    {{ result}}
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="categoryName">Category:</label>
-              <input type="text" class="form-control" id="categoryName" formControlName="categoryName" (input)="searchCategory($any($event.target).value)" autocomplete="off">
-              <div *ngIf="classifications.length > 0 && activeField === 'category'" class="dropdown"
-                (click)="$event.stopPropagation()">
-                <ul class="suggestions-list">
-                  <li *ngFor="let result of classifications" (click)="selectCategory(result)">
-                    {{ result}}
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="form-group">
-              <button type="submit" class="btn btn-primary" [disabled]="!assetForm.valid">Submit</button>
-              <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
-            </div>
-          </form>
-        </div>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary" [disabled]="!assetForm.valid">Submit</button>
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

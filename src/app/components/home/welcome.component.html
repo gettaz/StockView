@@ -8,11 +8,13 @@
           <!-- Pie Chart Canvas -->
           <div class="chart-container">
             <div class="switch-container">
-              <input type="checkbox" id="chartToggle" class="chart-toggle" (change)="toggleChartData()">
-               <label for="chartToggle" class="chart-label">
-                <span class="broker">Broker</span>
-                <span class="categories">Categories</span>
-              </label>
+              <span (click)="tg.toggle()" 
+              class="mat-slide-toggle-left mat-slide-toggle">
+                Broker
+              </span>
+              <mat-slide-toggle #tg (change)="toggleChartData()">
+                Categories
+              </mat-slide-toggle>
             </div>
             <canvas id="myChart"></canvas>
           </div>
@@ -24,7 +26,6 @@
               <option value="7days">Last 7 Days</option>
             <option value="month">Last Month</option>
             <option value="YTD">Year To Date</option>
-            <option value="all">All Time</option>
           </select>
         </form>
           <!-- Timeline Chart Canvas -->
@@ -32,10 +33,10 @@
 
           <!-- Toggle Buttons for Timeline Chart -->
           <div class="text-center">
-            <mat-button-toggle-group>
-              <mat-button-toggle (click)="toggleView('all')">All</mat-button-toggle>
-              <mat-button-toggle (click)="toggleView('category')">Category</mat-button-toggle>
-              <mat-button-toggle (click)="toggleView('broker')">Broker</mat-button-toggle>
+            <mat-button-toggle-group [(ngModel)]="currentView" name="viewOptions">
+              <mat-button-toggle value="all" (click)="toggleView('all')">All</mat-button-toggle>
+              <mat-button-toggle value="category" (click)="toggleView('category')">Category</mat-button-toggle>
+              <mat-button-toggle value="broker" (click)="toggleView('broker')">Broker</mat-button-toggle>
             </mat-button-toggle-group>
           </div>
         </div>
